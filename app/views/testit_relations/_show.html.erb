@@ -1,0 +1,14 @@
+<div class="contextual">
+<% if User.current.allowed_to?(:manage_issue_relations, @project) %>
+    <%= link_to_function l(:button_add), "addTestRelation(this,'#{@issue.id}','#{@testit_relation.types_for(@issue)}');", :class => 'icon' %>
+<% end %>
+</div>
+
+<p><strong><%=l(:label_testit_relation)%></strong></p>
+
+
+<% if @testit_relations.present? %>
+    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => @testit_relations, :issue => @issue}%>
+<% end %>
+
+

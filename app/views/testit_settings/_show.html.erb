@@ -1,0 +1,10 @@
+<%
+@testit_setting = Testit::Setting.find_or_initialize_by(:project_id => @project.id)
+
+%>
+  <%= labelled_form_for @testit_setting,
+      :as => :setting,
+      :url => {:controller => :testit_settings, :action => :edit, :project_id => @project },
+      :lang => current_language do |f| %>
+  <%= render :partial => 'testit_settings/form', :locals => {:f => f } %>
+  <% end %>

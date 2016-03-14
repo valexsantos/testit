@@ -1,0 +1,308 @@
+
+<script type="text/javascript">
+var params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){params[key] = value;});
+
+/*
+ * Divs
+ */
+
+
+function submit_query_form(id) {
+      selectAllOptions("selected_columns");
+      $('#'+id).submit();
+}
+
+function selectAllOptions(id) {
+   $('#'+id).find('option').prop('selected', true);
+}
+
+
+function merge_options(obj1,obj2){
+    var obj3 = {};
+    for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+    for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+    return obj3;
+}
+
+function ajx(url, dest_id)  {
+    $.ajax({
+        url: url,
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+            $('#ajax-indicator').hide();
+            $('#'+dest_id).html(data);
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+   });
+}
+
+
+/*
+ * issue list aux
+ */
+function sortColumn(element, url_options) {
+    $.ajax({
+        url: url_options,
+        type: 'get',
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+           $(document).trigger('update-issue-list', [data]);
+           $('#ajax-indicator').hide();
+        },
+        error: function(xhr){
+           $('#ajax-indicator').hide();
+           alert('Error: ' + xhr.statusText);
+        }
+    });
+};
+
+
+function loadIssueListbyUrl(the_url) {
+    $.ajax({
+        url: the_url,
+        type: 'get',
+        data: { modal : 'true', table: 'true'},
+        beforeSend: function(){
+           $('#ajax-indicator').show();
+        },
+        success: function(data){
+           $(document).trigger('update-issue-list', [data]);
+           $('#ajax-indicator').hide();
+        },
+        error: function(xhr){
+           $('#ajax-indicator').hide();
+           alert('Error: ' + xhr.statusText);
+        }
+    });
+};
+
+/*
+ * Issue aux
+ */
+function showIssue(issue_id) {
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_test_cases', :action => :show%>"+"/"+issue_id,
+        type: 'get',
+        data: merge_options({ modal : 'true'}, params),
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+           $(document).trigger('view-issue', [data]);
+           $('#ajax-indicator').hide();
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+    });
+};
+
+function editIssue(issue_id, element) {
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_test_cases', :action => :edit%>"+"/"+issue_id,
+        type: 'get',
+        data: merge_options({ modal : 'true'}, params),
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+           $('#ajax-indicator').hide();
+           showTestitModal('testit-dialog', data, '840px');
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+    });
+};
+
+
+function updateIssue(form_id) {
+    var formData =  $('#'+form_id).serialize();
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_test_cases', :action => :update%>",
+        type: 'post',
+        data: formData,
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+            hideTestitModal();
+            $(document).trigger('view-issue', [data]);
+            $(document).trigger('update-issue-list');
+            $('#ajax-indicator').hide();
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+        });
+    return false;
+};
+
+function createIssue(form_id) {
+    var formData =  $('#'+form_id).serialize();
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_test_cases', :action => :create%>",
+        type: 'post',
+        data: formData,
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+            hideTestitModal();
+            $(document).trigger('view-issue', [data]);
+            $(document).trigger('update-issue-list');
+            $('#ajax-indicator').hide();
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+        });
+    return false;
+};
+
+function addTestRelation(element_id, issue_id, relation_types) {
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_relations', :action => :new%>",
+        type: 'get',
+        data: { id: issue_id },
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+            $('#ajax-indicator').hide();
+           showTestitModal('testit-dialog', data, '840px');
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+        });
+    return false;
+
+}
+function createRelation(form_id) {
+    // var formData =  $('#'+form_id).serialize();
+    var formData = $('#'+form_id).parents('form').first().serialize();
+    console.log(formData);
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_relations', :action => :create%>",
+        type: 'post',
+        data: formData,
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+            hideTestitModal();
+            $(document).trigger('view-issue', [data]);
+            $(document).trigger('update-issue-list');
+            $('#ajax-indicator').hide();
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+        });
+    return false;
+};
+
+
+function add_test_case(p) {
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_test_cases', :action => :new%>",
+        type: 'get',
+        data: { modal : 'true'},
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+           // console.log(data);
+           $('#ajax-indicator').hide();
+           showTestitModal('testit-dialog', data, '840px');
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+    });
+};
+
+function add_test_suite(p) {
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_test_suites', :action => :new%>",
+        type: 'get',
+        data: merge_options({ modal : 'true'}, params),
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+           // console.log(data);
+           $('#ajax-indicator').hide();
+           showTestitModal('testit-dialog', data, '840px');
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+    });
+};
+
+/*
+ * modal window
+ */
+function showTestitModal(id, data, width) {
+    var el = $('#'+id).first();
+    if (el.length === 0 || el.is(':visible')) {return;}
+    el.html(data);
+    var title = el.find('#dialog-title').text();
+    el.dialog({
+        width: width,
+        modal: true,
+        resizable: true,
+        zIndex: 25,
+        title: title
+        });
+    el.find("input[type=text], input[type=submit]").first().focus();
+}
+
+function hideTestitModal(el) {
+    var modal;
+    if (el) {
+        modal = $(el).parents('.ui-dialog-content');
+    } else {
+        modal = $('#testit-dialog');
+    }
+    modal.dialog("close");
+    modal.html('');
+}
+/*
+ * Event driven
+ */
+$(document).bind('view-issue', function(e, data) {
+   $('#testit-view').html(data);
+});
+$(document).bind('update-issue-list', function(e, data) {
+    if (data) {
+       $('#issue-list').html(data);
+    } else {
+       var url = $('#issue-list').find('input[name=back_url]').val();
+       if (url) {
+          loadIssueListbyUrl(url);
+       } else {
+          ajx('<%=url_for( :controller => "testit_test_cases", :action => "index", :project_id => @project,
+               :table => true, :modal=> true)%>','issue-list');
+       }
+    }
+});
+</script>
+

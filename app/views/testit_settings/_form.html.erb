@@ -1,0 +1,11 @@
+<%= error_messages_for 'setting' %>
+<div class="box tabular">
+  <p><%=f.select :bug_tracker, @project.trackers.collect {|t| [t.name, t.id]}, :required => true %></p>
+  <p><%=f.select :requirement_tracker, @project.trackers.collect {|t| [t.name, t.id.to_s]}, {}, :multiple => true, :size => 5, :selected => @testit_setting.requirement_tracker %></p>
+  <p><%=f.select :test_suite_tracker, @project.trackers.collect {|t| [t.name, t.id.to_s]}, :required => true, :selected => @testit_setting.test_suite_tracker %></p>
+  <p><%=f.select :test_case_tracker, @project.trackers.collect {|t| [t.name, t.id.to_s]},  :required => true, :selected => @testit_setting.test_case_tracker %></p>
+  <p><%=f.select :test_plan_tracker, @project.trackers.collect {|t| [t.name, t.id.to_s]},  :required => true, :selected => @testit_setting.test_plan_tracker %></p>
+  <p><%=f.select :test_run_tracker, @project.trackers.collect {|t| [t.name, t.id.to_s]},   :required => true, :selected => @testit_setting.test_run_tracker %></p>
+</div>
+  
+<%= submit_tag l(:button_save) %>
