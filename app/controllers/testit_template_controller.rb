@@ -1,4 +1,4 @@
-class TestitTestCasesController < ApplicationController
+class TestitTemplatesController < ApplicationController
   unloadable
 
   before_filter :find_project, :authorize
@@ -6,6 +6,7 @@ class TestitTestCasesController < ApplicationController
   # GET display a list of all events
   # /photos
   def index
+      # TODO FIX - Retirar as inicializacoes dos settings
       @setting = Testit::Setting.find_by(:project_id => @project) || Testit::Setting.create(:project_id => @project.id)
       respond_to do | format | 
           format.html { render :layout => !request.xhr? }

@@ -19,6 +19,7 @@ class TestitTestCasesController < ApplicationController
   helper :timelog
   helper :issue_relations
   #
+  helper :testit
   helper :testit_sort
   helper :testit_queries
   helper :testit_issues
@@ -30,12 +31,16 @@ class TestitTestCasesController < ApplicationController
   # GET display a list of all events
   # /photos
   def index
+      @settings = Testit::Setting.find_by(:project_id => @project)
       super
+      # TODO  "f"=>{"tracker_id"=>"="}, "v"=>{"tracker_id"=>["4", "5"]}
+      # A query apenas deve devolver issues do tipo test_case e test_suite
       respond_to do | format | 
           if params[:table]
-          format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, :locals => {:query => @query, :issues => @issues} }
+              # TODO FIX isto e' o reload da tabela 
+              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, :locals => {:query => @query, :issues => @issues} }
           else
-          format.html { render :layout => !request.xhr? }
+              format.html { render :layout => !request.xhr? }
           end
       end
   end

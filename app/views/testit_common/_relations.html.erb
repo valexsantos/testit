@@ -37,5 +37,6 @@
                  :method => :post,
                  :html => {:id => 'new-relation-form', :style => 'display: none;'}
                } do |f| %>
+               <%# TODO XXX Fix  submit action - render create.js.erb -> redmine spec -> breaks issue_link %>
 <%= render :partial => 'issue_relations/form', :locals => {:f => f}%>
 <% end %>

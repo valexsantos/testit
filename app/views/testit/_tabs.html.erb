@@ -1,0 +1,37 @@
+<% selected_tab = params[:tab] ? params[:tab].to_s : tabs.first[:name] %>
+<div id="testit_tabs"  class="tabs" >
+  <ul>
+      <% tabs.each do |tab| -%>
+          <li><%= link_to_function l(tab[:label]), 
+              "$(document).trigger('testit-tab-selected', {url:'#{url_for(tab[:url])}',name:'#{tab[:name]}'});",
+              :class => (tab[:name] != selected_tab ? nil : 'selected'),
+           :id => "tab-#{tab[:name]}"%></li>
+      <% end -%>
+  </ul>
+
+
+  <div class="tabs-buttons" style="display:none;">
+    <button class="tab-left" type="button" onclick="moveTabLeft(this);"></button>
+    <button class="tab-right" type="button" onclick="moveTabRight(this);"></button>
+  </div>
+</div>
+
+<% tabs.each do |tab| -%>
+    <%= content_tag('div', nil, 
+        :id => "tab-content-#{tab[:name]}",
+        :style => (tab[:name] != selected_tab ? 'display:none' : nil),
+        :class => 'tab-content') %>
+<% end %>
+
+
+<script>
+  $(document).ready(displayTabsButtons);
+  $(window).resize(displayTabsButtons);
+  <% tabs.each do |tab| -%>
+    <% if tab[:name] == selected_tab %> 
+  $(document).trigger('testit-tab-selected', {url:'<%=url_for(tab[:url])%>',name:'<%=tab[:name]%>'});
+    <%end%>
+  <% end %>
+</script>
+
+

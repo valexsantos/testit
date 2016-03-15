@@ -1,8 +1,8 @@
 <%
-@testit_setting = Testit::Setting.find_or_initialize_by(:project_id => @project.id)
-
+   # TODO FIX nada de inicializar os settings ainda por cima numa view
+   @testit_settings = Testit::Setting.find_or_initialize_by(:project_id => @project.id)
 %>
-  <%= labelled_form_for @testit_setting,
+  <%= labelled_form_for @testit_settings,
       :as => :setting,
       :url => {:controller => :testit_settings, :action => :edit, :project_id => @project },
       :lang => current_language do |f| %>

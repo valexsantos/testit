@@ -4,37 +4,16 @@
     <%= javascript_include_tag 'testit', :plugin => 'testit' %>
     <%= javascript_include_tag 'attachments' %>
     <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'context_menu' %>
     <% heads_for_wiki_formatter %>
 <% end %>
 <% include_calendar_headers_tags %>
 
-<script type="text/javascript">
-	// Project identifier
-	jsProjectId = <%= @project.id %>;
-	// User access rights
-	jsCanEdit = <%= User.current.allowed_to?(:edit_test_cases, @project) != false %>;
-</script>
-<style>
-.ui-widget-header {
-    background: #fff url("/stylesheets/jquery/images/ui-bg_glass_65_ffffff_1x400.png") repeat-x scroll 50% 50%;
-    border: 0px solid #628db6;
-    color: #000;
-    font-weight: bold;
-}
-.ui-widget-content {
-//    background: rgba(0, 0, 0, 0) none
-}
-</style>
 <% html_title "TestIt" %>
 <%= render :partial => 'testit_common/js'%>
-<script>
-   $(function() {
-       $( "#testit_tabs" ).tabs();
-   });
-</script>
 
 <!-- Creating plugin inner tabs -->
-<%= render :partial => 'testit_common/testit_tabs', :locals => { :tabs => get_testit_tabs(@project) } %>
+<%= render :partial => 'testit/tabs', :locals => { :tabs => get_testit_tabs(@project) } %>
 
 <div id="testsuite-dialog" style="display:none"></div>
 <div id="testit-dialog" style="display:none"></div>

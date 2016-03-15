@@ -8,6 +8,7 @@ module TestitIssuesController
     # GET display a list of all events
     # /photos
     def index
+        # TODO FIX  Retirar estas inicializacoes dos settings
         @setting = Testit::Setting.find_by(:project_id => @project) || Testit::Setting.create(:project_id => @project.id)
 
         retrieve_query

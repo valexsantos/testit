@@ -14,6 +14,7 @@ class TestitRelationsController < ApplicationController
   # GET display a list of all events
   # /photos
   def index
+      # TODO - Remopverestas inicializacoes
       @setting = Testit::Setting.find_by(:project_id => @project) || Testit::Setting.create(:project_id => @project.id)
       respond_to do | format | 
           format.html { render :layout => !request.xhr? }

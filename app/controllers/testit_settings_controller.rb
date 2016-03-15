@@ -7,6 +7,7 @@ class TestitSettingsController < ApplicationController
   end
 
   def edit
+      # TODO FIX Remover estaas inicializacoes do settings
     @setting = Testit::Setting.find_or_initialize_by(:project_id => @project.id)
     unless params[:setting][:requirement_tracker]
       params[:setting][:requirement_tracker] = []

@@ -21,8 +21,6 @@ module Testit
         #   label_part_of_test_plan : "Part of test plan"
         #
         TYPES = {
-            # TYPE_BLOCKS =>      { :name => :label_blocks, :sym_name => :label_blocked_by, :order => 4, :sym => TYPE_BLOCKED },
-            #TYPE_BLOCKED =>     { :name => :label_blocked_by, :sym_name => :label_blocks, :order => 5, :sym => TYPE_BLOCKS, :reverse => TYPE_BLOCKS },
             TYPE_TESTS     => { :name => :label_tests, :sym_name => :label_tested_by, :order => 1, :sym => TYPE_TESTS, :reverse => TYPE_TESTED_BY },
             TYPE_TESTED_BY => { :name => :label_tested_by, :sym_name => :label_tests, :order => 2, :sym => TYPE_TESTED_BY, :reverse => TYPE_TESTS },
             #
@@ -151,23 +149,38 @@ module Testit
             issue_to.init_journal(user) if issue_to
         end
 
-        # 
-        # TODO Remover isto daqui
-        #
-        #
-        def types_for(issue)
-            case issue.tracker
-            when TestCase.tracker(issue.project)
-                1
-            when TestSuite.tracker(issue.project)
-                2
-            when TestRun.tracker(issue.project)
-                3
-            when TestPlan.tracker(issue.project)
-                4
-            else
-                0
+        def relations_for(issue)
+            x=[]
+            return unless issue
+
+            testit_settings=  Testit::Setting.find_by(:project_id => issue.project)
+            if testit_settings
+                a=nil
+                Testit::Setting::TrackersType.each { | tt |
+                    trc = testit_settings.tracker(tt)
+                    if trc.is_a?(Array)
+                        a=tt if trc.include?(issue.tracker)
+                    else
+                        a=tt if trc == issue.tracker
+                    end
+                    break if a
+                }
+                if a
+                    case a
+                    when Testit::Setting::RequirementTrackerType
+                        x = [ TYPE_TESTED_BY]
+                    when Testit::Setting::TestCaseTrackerType
+                        x = [ TYPE_TESTS, TYPE_HAS_TR, TYPE_PART_OF_TS, TYPE_PART_OF_TP]
+                    when Testit::Setting::TestSuiteTrackerType
+                        x = [ TYPE_HAS_TC ]
+                    when Testit::Setting::TestPlanTrackerType
+                        x = [ TYPE_HAS_TC ]
+                    when Testit::Setting::TestRunTrackerType
+                        x = [ TYPE_PART_OF_TC ]
+                    end
+                end
             end
+            x.to_json
         end
 
         private

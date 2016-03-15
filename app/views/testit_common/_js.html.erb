@@ -41,6 +41,16 @@ function ajx(url, dest_id)  {
    });
 }
 
+function showTestitTab(url, name) {
+    $('#tab-content-' + name).parent().find('.tab-content').hide();
+    $('#tab-content-' + name).parent().find('.tab-content').html('');
+    $('#tab-content-' + name).parent().find('div.tabs a').removeClass('selected');
+    ajx(url, 'tab-content-' + name);
+    $('#tab-content-' + name).show();
+    $('#tab-' + name).addClass('selected');
+    return false;
+}
+
 
 /*
  * issue list aux
@@ -304,5 +314,10 @@ $(document).bind('update-issue-list', function(e, data) {
        }
     }
 });
+
+$(document).bind('testit-tab-selected',  function(e, data ) {
+    showTestitTab(data.url, data.name);
+});
+
 </script>
 

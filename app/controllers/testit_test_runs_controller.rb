@@ -4,6 +4,7 @@ class TestitTestRunsController < ApplicationController
   before_filter :find_project, :authorize
 
   def index
+      # TODO FIX - Remover estas inicializacoes
     @setting = Testit::Setting.find_by(:project_id => @project) || Testit::Setting.create(:project_id => @project.id)
       respond_to do | format |
           format.html { render :layout => !request.xhr? }

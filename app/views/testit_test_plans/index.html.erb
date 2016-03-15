@@ -4,33 +4,11 @@
         <%= link_to_function l(:label_add_test_plan), 'add_test_plan(this)', :class => 'icon icon-add' %>
     <% end %>
 </div>
-
 <div class="tab-content">
     <div class="splitcontentleft">
-        <div class="contextual">
-            <% if !@query.new_record? && @query.editable_by?(User.current) %>
-                <%= link_to l(:button_edit), edit_query_path(@query), :class => 'icon icon-edit' %>
-                <%= delete_link query_path(@query) %>
-            <% end %>
-        </div>
-
-        <h2><%= @query.new_record? ? l(:label_test_plan_plural) : @query.name %></h2>
-        <%= render :partial => 'testit_common/query', :locals => {:query => @query} %>
-
-        <% if @query.valid? %>
-           <% if @issues.empty? %>
-              <p class="nodata"><%= l(:label_no_data) %></p>
-           <% else %>
-              <%= render_query_totals(@query) %>
-              <%= render :partial => 'testit_common/list', :locals => {:issues => @issues, :query => @query} %>
-              <span class="pagination"><%= pagination_links_full @issue_pages, @issue_count %></span>
-           <% end %>
-
-           <%= render :partial => 'testit_common/other_formats', :locals => {:query => @query, :available_formats => ['Atom', 'CSV', 'PDF']} %>
-
-       <% end %>
-
-
+       <div id="issue-list">
+           <%= render :partial => 'testit_common/issue_list', :locals => {:issues => @issues, :query => @query, :title => l(:label_test_plan_plural)} %>
+       </div>
     </div>
     <div class="splitcontentright">
        <div id="testit-view"></div>

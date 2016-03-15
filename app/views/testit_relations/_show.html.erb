@@ -1,6 +1,6 @@
 <div class="contextual">
 <% if User.current.allowed_to?(:manage_issue_relations, @project) %>
-    <%= link_to_function l(:button_add), "addTestRelation(this,'#{@issue.id}','#{@testit_relation.types_for(@issue)}');", :class => 'icon' %>
+    <%= link_to_function l(:button_add), "addTestRelation(this,'#{@issue.id}','#{@testit_relation.relations_for(@issue)}');", :class => 'icon' %>
 <% end %>
 </div>
 

@@ -1,3 +1,4 @@
+<%# tracker type auto reload %>
 replaceIssueFormWith('<%= escape_javascript(render :partial => 'testit_common/form') %>');
 
 <% if User.current.allowed_to?(:log_time, @issue.project) %>

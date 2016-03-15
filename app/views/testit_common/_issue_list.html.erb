@@ -1,4 +1,4 @@
-<%# Issu list query filters and table %>
+<%# Issue list query filters and table %>
 
  <div class="contextual">
      <% if !@query.new_record? && @query.editable_by?(User.current) %>
@@ -7,7 +7,7 @@
      <% end %>
  </div>
 
- <h2><%= @query.new_record? ? l(:label_test_case_plural) : @query.name %></h2>
+ <h2><%= @query.new_record? ? title : @query.name %></h2>
  <%= render :partial => 'testit_common/query', :locals => {:query => @query, :issues => @issues} %>
 
  <% if @query.valid? %>
@@ -16,7 +16,8 @@
     <% else %>
         <%= render_query_totals(@query) %>
        <%= render :partial => 'testit_common/list', :locals => {:issues => @issues, :query => @query} %>
-       <% # TODO XXX fix "pagination
+       <%# TODO XXX fix pagination. definido num modulo dentro de lib/redmine/pagination.rb ... %>
+       <% 
            x=pagination_links_full @issue_pages, @issue_count
            x.gsub!( /href=\"(.*?)\"/,'href="#" onclick="loadIssueListbyUrl(\'\1\');"')
        %>

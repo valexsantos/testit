@@ -5,8 +5,11 @@ class TestitController < ApplicationController
   before_filter :find_project, :authorize
 
   def index
-    @setting = Testit::Setting.find_by(:project_id => @project) || Testit::Setting.create(:project_id => @project.id)
-    p @setting
+    @setting = Testit::Setting.find_by(:project_id => @project)
+    if !@setting
+        flash[:notice] = "please configure TestIt tool first"
+        redirect_to settings_project_path(@project, :tab => 'testit')
+    end
   end
 
 

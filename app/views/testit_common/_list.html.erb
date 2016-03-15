@@ -3,14 +3,15 @@
 <%= form_tag({}) do -%>
 <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
 <div class="autoscroll">
-    <%# TODO id for relations %>
+    <%# TODO FIX id for relations. para poder reusar esta view, a form tem de ter id proprio 
+        TODO FIX caso contrario os valores vem da view principal %>
     <table id="table-issue-list" class="list issues <%= sort_css_classes %>">
       <thead>
         <tr>
-          <th class="checkbox hide-when-print">
-            <%= link_to image_tag('toggle_check.png'), {},
-                                  :onclick => 'toggleIssuesSelection(this); return false;',
-                                  :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
+            <th class="checkbox hide-when-print">
+                        <%= check_box_tag 'check_all', '', false, :class => 'toggle-selection',
+                              :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
+
           </th>
           <% @query.inline_columns.each do |column| %>
             <%= column_header(column) %>
@@ -48,5 +49,11 @@
     </table>
   </div>
 <% end -%>
+
+<script>
+$(document).ready(function(){
+  $('input[type=checkbox].toggle-selection').on('change', toggleIssuesSelection);
+});
+</script>
 
 
