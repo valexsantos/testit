@@ -15,11 +15,11 @@
 <!-- Creating plugin inner tabs -->
 <%= render :partial => 'testit/tabs', :locals => { :tabs => get_testit_tabs(@project) } %>
 
-<div id="testsuite-dialog" style="display:none"></div>
-<div id="testit-dialog" style="display:none"></div>
-<div id="testit-error" style="display:none" class="error-message"></div>
 
 <% content_for :sidebar do %>
 <% end%>
+<div id="testsuite-dialog" style="display:none"></div>
+<div id="testit-dialog" style="display:none"></div>
+<div id="testit-error" style="display:none" class="error-message"></div>
 
 

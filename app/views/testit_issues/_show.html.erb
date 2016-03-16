@@ -1,5 +1,5 @@
 
-<%= render :partial => 'testit_common/action_menu' %>
+<%= render :partial => 'testit_issues/action_menu' %>
 
 <h2><%= issue_heading(@issue) %></h2>
 
@@ -116,7 +116,7 @@
     <% if @relations.present? || User.current.allowed_to?(:manage_issue_relations, @project) %>
         <hr />
         <div id="relations">
-            <%= render :partial => 'testit_common/relations'%>
+            <%= render :partial => 'testit_issues/relations'%>
         </div>
     <% end %>
 </div>
@@ -124,17 +124,17 @@
 <% if @changesets.present? %>
     <div id="issue-changesets">
         <h3><%=l(:label_associated_revisions)%></h3>
-        <%= render :partial => 'testit_common/changesets', :locals => { :changesets => @changesets} %>
+        <%= render :partial => 'testit_issues/changesets', :locals => { :changesets => @changesets} %>
     </div>
 <% end %>
 
 <% if @journals.present? %>
     <div id="history">
         <h3><%=l(:label_history)%></h3>
-        <%= render :partial => 'testit_common/history', :locals => { :issue => @issue, :journals => @journals } %>
+        <%= render :partial => 'testit_issues/history', :locals => { :issue => @issue, :journals => @journals } %>
     </div>
 <% end %>
 
 
-<%= render :partial => 'testit_common/other_formats', :locals => {:query => @query, :available_formats => ['Atom', 'PDF']} %>
+<%= render :partial => 'testit_issues/other_formats', :locals => {:query => @query, :available_formats => ['Atom', 'PDF']} %>
 

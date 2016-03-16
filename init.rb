@@ -15,7 +15,7 @@ Redmine::Plugin.register :testit do
     name 'TestIt'
     author 'Vasco Santos'
     description 'Test management tool'
-    version '0.0.1'
+    version '0.0.2'
     url 'https://github.com/valexsantos/testit'
     author_url 'https://github.com/valexsantos'
 
@@ -24,19 +24,21 @@ Redmine::Plugin.register :testit do
     project_module :testit do
         permission :view_testcases, {
             'testit' => [:index ],
-            'testit_test_suites' => [:index, :show ],
-            'testit_test_cases'  => [:index, :show ],
-            'testit_test_plans'  => [:index, :show, :list ],
-            'testit_test_runs'   => [:index, :show],
+            'testit_issues' => [:index, :show ],
+            'testit_suites' => [:index, :show ],
+            'testit_tests'  => [:index, :show ],
+            'testit_plans'  => [:index, :show, :list ],
+            'testit_runs'   => [:index, :show],
             'testit_relations'   => [:index ],
             'testit_reports'     => [:index]
         }
         permission :manage_testcases, {
             'testit' => [:index ],
-            'testit_test_suites' => [:new, :edit, :destroy, :create, :update, :copy, :move, :add_tc, :rm_tc ],
-            'testit_test_cases'  => [:new, :edit, :destroy, :create, :update, :copy, :move, :add_tr ],
-            'testit_test_plans'  => [:new, :edit, :destroy, :create, :update, :copy, :add_tc, :rm_tc],
-            'testit_test_runs'   => [:new, :edit, :destroy, :create, :update  ],
+            'testit_issues' => [:new, :edit, :destroy, :create, :update, :copy, :move, :add_tc, :rm_tc ],
+            'testit_suites' => [:new, :edit, :destroy, :create, :update, :copy, :move, :add_tc, :rm_tc ],
+            'testit_tests'  => [:new, :edit, :destroy, :create, :update, :copy, :move, :add_tr ],
+            'testit_plans'  => [:new, :edit, :destroy, :create, :update, :copy, :add_tc, :rm_tc],
+            'testit_runs'   => [:new, :edit, :destroy, :create, :update  ],
             'testit_relations'   => [:new, :edit, :destroy, :create, :update  ],
             'testit_reports'     => [:index]
         }, :require => :member

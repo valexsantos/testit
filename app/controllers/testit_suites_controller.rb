@@ -1,12 +1,8 @@
-class TestitTestPlansController < ApplicationController
+class TestitSuitesController < ApplicationController
   unloadable
 
-  before_filter :find_project
+  before_filter :find_project, :authorize
   before_filter :find_issue, :only => [:show, :edit, :update]
-  before_filter :find_issues, :only => [:destroy]
-  before_filter :authorize, :except => [:index, :new, :create]
-
-  before_filter :build_new_issue_from_params, :only => [:new, :create]
 
   helper :projects
   helper :custom_fields
@@ -17,18 +13,17 @@ class TestitTestPlansController < ApplicationController
   helper :watchers
   helper :attachments
   helper :repositories
+  helper :sort
   helper :timelog
-  #
-  helper :testit_sort
+  helper :issues
   helper :testit_queries
-  helper :testit_issues
 
-  include TestitIssuesController
-
+  include TestitIssuesHelper
 
 
   # GET display a list of all events
   # /photos
+
   def index
       super
       respond_to do | format | 

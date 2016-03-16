@@ -10,12 +10,12 @@
 
 <% if @issue.safe_attribute?('project_id') && (!@issue.new_record? || @project.nil? || @issue.copy?) %>
 <p><%= f.select :project_id, project_tree_options_for_select(@issue.allowed_target_projects, :selected => @issue.project), {:required => true},
-    :onchange => "updateIssueFrom('#{escape_javascript url_for(:controller => 'testit_test_cases', :action => 'edit', :format => 'js', :project => @project, :issue=> @issue)}', this)" %></p>
+    :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %></p>
 <% end %>
 
 <% if @issue.safe_attribute? 'tracker_id' %>
 <p><%= f.select :tracker_id, @issue.project.trackers.collect {|t| [t.name, t.id]}, {:required => true},
-                :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %></p>
+    :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %></p>
 <% end %>
 
 <% if @issue.safe_attribute? 'subject' %>
@@ -39,7 +39,7 @@
 <% end %>
 
 <div id="attributes" class="attributes">
-  <%= render :partial => 'testit_common/attributes' %>
+  <%= render :partial => 'testit_issues/attributes' %>
 </div>
 
 <%= call_hook(:view_issues_form_details_bottom, { :issue => @issue, :form => f }) %>

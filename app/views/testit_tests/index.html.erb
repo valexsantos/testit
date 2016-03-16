@@ -1,3 +1,4 @@
+
 <div class="contextual">
     <% if User.current.allowed_to?(:manage_testcases, nil, :global => true) %>
         <%= link_to_function l(:label_add_test_suite), 'add_test_suite(this)', :class => 'icon icon-add' %>

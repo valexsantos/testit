@@ -1,4 +1,4 @@
-class TestitTestCasesController < ApplicationController
+class TestitTestsController < ApplicationController
   unloadable
 
   before_filter :find_project 
@@ -24,9 +24,14 @@ class TestitTestCasesController < ApplicationController
   helper :testit_queries
   helper :testit_issues
   helper :testit_relations
+  helper :testit_tests
 
-  include TestitIssuesController
+  include TestitIssuesAbstractController
+  include TestitTestsHelper
 
+  def the_query
+      {:key=>:test_query, :klass => Testit::TestsQuery}
+  end
 
   # GET display a list of all events
   # /photos
@@ -86,7 +91,7 @@ class TestitTestCasesController < ApplicationController
       if super
           flash[:notice] = l(:notice_test_case_created)
           # redirect_to :controller=> :testit, :action => :index, :project_id => @project
-          redirect_to  :controller => :testit_test_cases, :action => :show, :project_id => @project, :id => @issue
+          redirect_to  :controller => :testit_tests, :action => :show, :project_id => @project, :id => @issue
       else
           flash[:error] = l(:failed_to_create) 
           redirect_to :action => :new, :project_id => @project
@@ -98,7 +103,7 @@ class TestitTestCasesController < ApplicationController
       if super
           render_attachment_warning_if_needed(@issue)
           flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
-          redirect_to  :controller => :testit_test_cases, :action => :show, :project_id => @project, :id => @issue
+          redirect_to  :controller => :testit_tests, :action => :show, :project_id => @project, :id => @issue
       else
           redirect_to :action => :edit, :project_id => @project
       end

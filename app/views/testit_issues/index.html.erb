@@ -1,0 +1,16 @@
+<div class="contextual">
+    <% if User.current.allowed_to?(:manage_testcases, nil, :global => true) %>
+        <%= link_to_function l(:label_issue_new), 'newIssue(this)', :class => 'icon icon-add' %>
+    <% end %>
+</div>
+<div class="tab-content">
+    <div class="splitcontentleft">
+       <div id="issue-list">
+           <%= render :partial => 'testit_issues/issue_list', :locals => {:issues => @issues, :query => @query, :title => l(:title_testit_issues)} %>
+       </div>
+    </div>
+    <div class="splitcontentright">
+       <div id="testit-view"></div>
+    </div>
+</div>
+

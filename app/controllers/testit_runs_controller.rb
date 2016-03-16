@@ -1,4 +1,4 @@
-class TestitTestRunsController < ApplicationController
+class TestitRunsController < ApplicationController
   unloadable
 
   before_filter :find_project, :authorize

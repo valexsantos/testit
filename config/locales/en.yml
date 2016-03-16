@@ -2,6 +2,7 @@
 en:
   project_module_testit: "TestIt"
 
+  title_testit_issues: "Issues"
   title_testit_tests: "Tests"
   title_testit_plans: "Plans"
   title_testit_executions: "Executions"

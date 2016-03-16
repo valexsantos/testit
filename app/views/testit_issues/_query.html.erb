@@ -1,4 +1,5 @@
-<%= form_tag( partial_query_common_options,
+<%= form_tag({ :controller => 'testit_issues', :action => 'index', :project_id => @project, 
+               :table=>true, :modal=> true, :layout => false },
    :method => :get, :id => 'query_form') do %>
    <div id="query_form_with_buttons" class="hide-when-print">
        <%= hidden_field_tag 'set_filter', '1' %>
@@ -38,7 +39,8 @@
        <p class="buttons">
        <%#= link_to_function l(:button_apply), 'submit_query_form("query_form")', :class => 'icon icon-checked' %>
        <%= link_to_function l(:button_apply), "$('#query_form').submit();", :class => 'icon icon-checked' %>
-       <%= link_to_function l(:button_clear), "ajx('#{partial_query_common_options({:set_filter => 1})}','issue-list')", :class => 'icon icon-reload' %>
+       <%= link_to_function l(:button_clear), "ajx('#{url_for( :controller => "testit_issues", :action => "index", :project_id => @project, 
+                  :table => true, :modal=> true,  :set_filter => 1)}','issue-list')", :class => 'icon icon-reload' %>
           <% if @query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %>
              <%= link_to_function l(:button_save),
                 "$('#query_form').attr('action','#{ @project ? new_project_query_path(@project) : new_query_path }').submit()",
