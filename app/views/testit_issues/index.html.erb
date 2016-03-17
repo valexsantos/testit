@@ -1,6 +1,6 @@
 <div class="contextual">
     <% if User.current.allowed_to?(:manage_testcases, nil, :global => true) %>
-        <%= link_to_function l(:label_issue_new), 'newIssue(this)', :class => 'icon icon-add' %>
+        <%= link_to_function l(:label_issue_new), "newIssue('#{url_for_new_testit_issue}',this)", :class => 'icon icon-add' %>
     <% end %>
 </div>
 <div class="tab-content">

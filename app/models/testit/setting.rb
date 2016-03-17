@@ -10,11 +10,11 @@ module Testit
     TestCaseTrackerType    = 'test_case_tracker'
     TestSuiteTrackerType   = 'test_suite_tracker'
     TestPlanTrackerType    = 'test_plan_tracker'
-    TestRunTrackerType     = 'test_plan_tracker'
+    TestRunTrackerType     = 'test_run_tracker'
 
     TrackersType = [ BugTrackerType, RequirementTrackerType, TestCaseTrackerType,
                      TestSuiteTrackerType, TestPlanTrackerType, TestRunTrackerType ]
-    # TODO add some validations
+
     attr_accessible :project_id, :bug_tracker, :requirement_tracker, :test_case_tracker,
         :test_suite_tracker, :test_plan_tracker, :test_run_tracker
 
@@ -55,6 +55,22 @@ module Testit
     def tracker(testit_tracker_type) 
         Tracker.find(self.send(testit_tracker_type))
     end
+
+    def issue_is_a?(testit_tracker_type, issue)
+        tk = self.tracker(testit_tracker_type)
+        if tk.is_a?(Array)
+            return tk.include?(issue.tracker)
+        else
+            return issue.tracker == tk
+        end
+    end
+
+    def tracker_type_of(issue)
+        TrackersType.each { | tt |
+            return tt if issue_is_a?(tt,issue)
+        }
+    end
+
   end
 
 end

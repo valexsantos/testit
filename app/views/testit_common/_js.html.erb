@@ -96,11 +96,11 @@ function loadIssueListbyUrl(the_url) {
 /*
  * Issue aux
  */
-function showIssue(issue_id, the_url) {
+function showIssue(the_url) {
     $.ajax({
-        url: the_url+"/"+issue_id,
+        url: the_url,
         type: 'get',
-        data: merge_options({ modal : 'true'}, params),
+        data: { modal : 'true'},
         beforeSend: function(){
             $('#ajax-indicator').show();
         },
@@ -115,11 +115,11 @@ function showIssue(issue_id, the_url) {
     });
 };
 
-function editIssue(issue_id, element, the_url) {
+function editIssue(the_url, element) {
     $.ajax({
-        url: the_url+"/"+issue_id,
+        url: the_url,
         type: 'get',
-        data: merge_options({ modal : 'true'}, params),
+        data: { modal : 'true'},
         beforeSend: function(){
             $('#ajax-indicator').show();
         },
@@ -135,7 +135,7 @@ function editIssue(issue_id, element, the_url) {
 };
 
 
-function updateIssue(form_id, the_url) {
+function updateIssue(the_url, form_id) {
     var formData =  $('#'+form_id).serialize();
     $.ajax({
         url: the_url,
@@ -158,7 +158,7 @@ function updateIssue(form_id, the_url) {
     return false;
 };
 
-function createIssue(form_id, the_url) {
+function createIssue(the_url, form_id) {
     var formData =  $('#'+form_id).serialize();
     $.ajax({
         url: the_url,
@@ -181,7 +181,7 @@ function createIssue(form_id, the_url) {
     return false;
 };
 
-function newIssue(the_url) {
+function newIssue(the_url, form_id) {
     $.ajax({
         url: the_url,
         type: 'get',
@@ -200,10 +200,12 @@ function newIssue(the_url) {
         }
     });
 };
-
-function addTestRelation(element_id, issue_id, relation_types) {
+/*
+ * testit relations
+ */
+function add_testit_rel(the_url, issue_id) {
     $.ajax({
-        url: "<%=url_for :controller => 'testit_relations', :action => :new%>",
+        url: the_url,
         type: 'get',
         data: { id: issue_id },
         beforeSend: function(){
@@ -219,7 +221,6 @@ function addTestRelation(element_id, issue_id, relation_types) {
         }
         });
     return false;
-
 }
 function createRelation(form_id) {
     // var formData =  $('#'+form_id).serialize();
@@ -246,7 +247,6 @@ function createRelation(form_id) {
     return false;
 };
 
-
 function add_test_case(p) {
     $.ajax({
         url: "<%=url_for :controller => 'testit_tests', :action => :new%>",
@@ -270,6 +270,25 @@ function add_test_case(p) {
 function add_test_suite(p) {
     $.ajax({
         url: "<%=url_for :controller => 'testit_suites', :action => :new%>",
+        type: 'get',
+        data: merge_options({ modal : 'true'}, params),
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+           // console.log(data);
+           $('#ajax-indicator').hide();
+           showTestitModal('testit-dialog', data, '840px');
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+    });
+};
+function add_test_plan(p) {
+    $.ajax({
+        url: "<%=url_for :controller => 'testit_plans', :action => :new%>",
         type: 'get',
         data: merge_options({ modal : 'true'}, params),
         beforeSend: function(){

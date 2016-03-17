@@ -7,8 +7,16 @@
 </div>
 <div class="tab-content">
     <div class="splitcontentleft">
-       <div id="issue-list">
-           <%= render :partial => 'testit_common/issue_list', :locals => {:issues => @issues, :query => @query, :title => l(:label_test_case_plural)} %>
+        <div id="issue-list">
+            <%= render :partial => 'testit_common/issue_list', 
+                :locals => {:issues => @issues, :query => @query, 
+                            :title => l(:label_test_case_plural),
+                            :available_formats => ['Atom', 'CSV', 'PDF'],
+                            :query_form_id => 'query-form',
+                            :query_submit_url => partial_query_common_options,
+                            :query_list_dest_id => 'issue-list',
+                            :table_form_id => 'table-issue-list',
+                            :table_show_select_all => false} %>
        </div>
     </div>
     <div class="splitcontentright">

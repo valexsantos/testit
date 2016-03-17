@@ -2,9 +2,9 @@ class TestitTestsController < ApplicationController
   unloadable
 
   before_filter :find_project 
-  before_filter :find_issue, :only => [:show, :edit, :update]
+  before_filter :find_issue, :only => [:show, :edit, :update, :add_ts, :add_tr]
   before_filter :find_issues, :only => [:destroy]
-  before_filter :authorize, :except => [:index, :new, :create]
+  before_filter :authorize, :except => [:index, :new, :create, :add_ts, :add_tr]
 
   before_filter :build_new_issue_from_params, :only => [:new, :create]
 
@@ -23,7 +23,6 @@ class TestitTestsController < ApplicationController
   helper :testit_sort
   helper :testit_queries
   helper :testit_issues
-  helper :testit_relations
   helper :testit_tests
 
   include TestitIssuesAbstractController
@@ -38,12 +37,19 @@ class TestitTestsController < ApplicationController
   def index
       @settings = Testit::Setting.find_by(:project_id => @project)
       super
-      # TODO  "f"=>{"tracker_id"=>"="}, "v"=>{"tracker_id"=>["4", "5"]}
-      # A query apenas deve devolver issues do tipo test_case e test_suite
       respond_to do | format | 
           if params[:table]
               # TODO FIX isto e' o reload da tabela 
-              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, :locals => {:query => @query, :issues => @issues} }
+              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
+                            :locals => {:query => @query, :issues => @issues,
+                            :title => l(:label_test_case_plural),
+                            :available_formats => ['Atom', 'CSV', 'PDF'],
+                            :query_form_id => 'query-form',
+                            :query_submit_url => partial_query_common_options,
+                            :query_list_dest_id => 'issue-list',
+                            :table_form_id => 'table-issue-list',
+                            :table_show_select_all => false}
+              } 
           else
               format.html { render :layout => !request.xhr? }
           end
@@ -52,6 +58,7 @@ class TestitTestsController < ApplicationController
   # GET display a specific event
   # /photos/:id
   def show
+      @settings = Testit::Setting.find_by(:project_id => @project)
       super
       respond_to do | format | 
           format.html { 
@@ -61,7 +68,6 @@ class TestitTestsController < ApplicationController
           format.pdf  {
               send_file_headers! :type => 'application/pdf', :filename => "#{@project.identifier}-#{@issue.id}.pdf"
           }
-
       end
   end
 
@@ -112,7 +118,6 @@ class TestitTestsController < ApplicationController
   # /photos/:id
   def destroy
   end
-
 
 end
 

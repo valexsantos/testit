@@ -1,14 +1,26 @@
+
+<%
+  # view for testit_relation
+  #
+  # locals:
+  #  :add_relation_action =>  "addTestRelation(this,'#{@issue.id}','#{@testit_relation.relations_for(@issue)}');" 
+  #  :title => <%=l(:label_testit_relation)
+%>
+  
+<div>
+    <hr/>
 <div class="contextual">
 <% if User.current.allowed_to?(:manage_issue_relations, @project) %>
-    <%= link_to_function l(:button_add), "addTestRelation(this,'#{@issue.id}','#{@testit_relation.relations_for(@issue)}');", :class => 'icon' %>
+    <%= link_to_function l(:button_add), "#{add_relation_action}", :class => 'icon' %>
 <% end %>
 </div>
 
-<p><strong><%=l(:label_testit_relation)%></strong></p>
+<p><strong><%=title%></strong></p>
 
 
 <% if @testit_relations.present? %>
-    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => @testit_relations, :issue => @issue}%>
+    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => @testit_relations, :issue => @issue, :tracker_type => "xxx"}%>
 <% end %>
 
+</div>
 

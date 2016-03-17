@@ -1,0 +1,83 @@
+
+<%
+ # view for testit_relations hook
+
+issue_tracker_type = @settings.tracker_type_of(@issue)
+
+return unless issue_tracker_type && issue_tracker_type != Testit::Setting::BugTrackerType
+
+views = { :req_list => false, :test_case_list => false, :test_run_list => false,
+          :test_suite_list => false, :test_plan_list => false}
+
+case issue_tracker_type
+when Testit::Setting::RequirementTrackerType
+    views[:test_case_list] = true
+when Testit::Setting::TestCaseTrackerType
+    views[:req_list] = true
+    views[:test_run_list] = true
+    views[:test_suite_list] = true
+    views[:test_plan_list] = true
+when Testit::Setting::TestSuiteTrackerType, Testit::Setting::TestPlanTrackerType
+    views[:test_case_list] = true
+when Testit::Setting::TestRunTrackerType 
+    views[:test_case_list] = true
+end
+
+# TODO FIX 
+  @testit_relations = @issue.testit_relations.select {|r| r.other_issue(@issue) && r.other_issue(@issue).visible? }
+
+%>
+
+
+<% if views[:req_list] %>
+    <%= render :partial => 'testit_relations/show', :locals => {
+        :testit_relations => @testit_relations, 
+        :issue => @issue, 
+        :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_req)}','#{@issue.id}');",
+        :title => l(:label_requirement_plural),
+        :tracker_type => issue_tracker_type
+    }%>
+<%end%>
+
+<% if views[:test_case_list] %>
+    <%= render :partial => 'testit_relations/show', :locals => {
+        :testit_relations => @testit_relations, 
+        :issue => @issue, 
+        :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tc)}','#{@issue.id}');",
+        :title => l(:title_testit_tests),
+        :tracker_type => issue_tracker_type
+    }%>
+<%end%>
+
+<% if views[:test_run_list] %>
+    <%= render :partial => 'testit_relations/show', :locals => {
+        :testit_relations => @testit_relations, 
+        :issue => @issue, 
+        :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tr)}','#{@issue.id}');",
+        :title => l(:title_testit_executions),
+        :tracker_type => issue_tracker_type
+    }%>
+<%end%>
+
+<% if views[:test_suite_list] %>
+    <%= render :partial => 'testit_relations/show', :locals => {
+        :testit_relations => @testit_relations, 
+        :issue => @issue, 
+        :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_ts)}','#{@issue.id}');",
+        :title => l(:title_testit_suites),
+        :tracker_type => issue_tracker_type
+    }%>
+<%end%>
+
+<% if views[:test_plan_list] %>
+    <%= render :partial => 'testit_relations/show', :locals => {
+        :testit_relations => @testit_relations, 
+        :issue => @issue, 
+        :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tp)}','#{@issue.id}');",
+        :title => l(:title_testit_plans),
+        :tracker_type => issue_tracker_type
+    }%>
+<%end%>
+
+
+

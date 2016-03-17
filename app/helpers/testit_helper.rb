@@ -62,7 +62,7 @@ module TestitHelper
             end
         end
         only_path = options[:only_path].nil? ? true : options[:only_path]
-        s =  link_to_function(text, "showIssue(#{issue.id});",  :class => issue.css_classes, :title => title)
+        s =  link_to_function(text, "showIssue('#{url_for_show_testit_issue(issue)}');",  :class => issue.css_classes, :title => title)
         #     s = link_to(text, issue_url(issue, :only_path => only_path),:class => issue.css_classes, :title => title)
         s << h(": #{subject}") if subject
         s = h("#{issue.project} - ") + s if options[:project]

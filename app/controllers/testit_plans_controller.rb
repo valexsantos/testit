@@ -25,6 +25,7 @@ class TestitPlansController < ApplicationController
   helper :testit_plans
 
   include TestitIssuesAbstractController
+  include TestitPlansHelper
 
   def the_query
       {:key=>:plans_query, :klass => Testit::PlansQuery}
@@ -38,7 +39,16 @@ class TestitPlansController < ApplicationController
       respond_to do | format | 
           if params[:table]
               # TODO FIX isto e' o reload da tabela 
-              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, :locals => {:query => @query, :issues => @issues} }
+              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
+                            :locals => {:query => @query, :issues => @issues,
+                            :title => l(:label_test_case_plural),
+                            :available_formats => ['Atom', 'CSV', 'PDF'],
+                            :query_form_id => 'query-form',
+                            :query_submit_url => partial_query_common_options,
+                            :query_list_dest_id => 'issue-list',
+                            :table_form_id => 'table-issue-list',
+                            :table_show_select_all => false}
+              }
           else
               format.html { render :layout => !request.xhr? }
           end

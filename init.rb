@@ -1,6 +1,7 @@
 require 'redmine'
 require 'testit_projects_helper_patch'
 require 'testit_issue_patch'
+require_dependency 'testit/hooks'
 
 Rails.configuration.to_prepare do
 
@@ -15,7 +16,7 @@ Redmine::Plugin.register :testit do
     name 'TestIt'
     author 'Vasco Santos'
     description 'Test management tool'
-    version '0.0.2'
+    version '0.0.4'
     url 'https://github.com/valexsantos/testit'
     author_url 'https://github.com/valexsantos'
 
@@ -29,17 +30,17 @@ Redmine::Plugin.register :testit do
             'testit_tests'  => [:index, :show ],
             'testit_plans'  => [:index, :show, :list ],
             'testit_runs'   => [:index, :show],
-            'testit_relations'   => [:index ],
+            'testit_relations'   => [:index, :show ],
             'testit_reports'     => [:index]
         }
         permission :manage_testcases, {
             'testit' => [:index ],
-            'testit_issues' => [:new, :edit, :destroy, :create, :update, :copy, :move, :add_tc, :rm_tc ],
-            'testit_suites' => [:new, :edit, :destroy, :create, :update, :copy, :move, :add_tc, :rm_tc ],
-            'testit_tests'  => [:new, :edit, :destroy, :create, :update, :copy, :move, :add_tr ],
-            'testit_plans'  => [:new, :edit, :destroy, :create, :update, :copy, :add_tc, :rm_tc],
+            'testit_issues' => [:new, :edit, :destroy, :create, :update, :copy, :move],
+            'testit_suites' => [:new, :edit, :destroy, :create, :update, :copy, :move],
+            'testit_tests'  => [:new, :edit, :destroy, :create, :update, :copy, :move],
+            'testit_plans'  => [:new, :edit, :destroy, :create, :update, :copy ],
             'testit_runs'   => [:new, :edit, :destroy, :create, :update  ],
-            'testit_relations'   => [:new, :edit, :destroy, :create, :update  ],
+            'testit_relations'   => [ :edit, :destroy, :create, :update, :new_tc, :new_tr, :new_ts, :new_tp, :new_req ],
             'testit_reports'     => [:index]
         }, :require => :member
 

@@ -1,5 +1,14 @@
-<%= form_tag( partial_query_common_options,
-   :method => :get, :id => 'query_form') do %>
+<%#
+  render :partial => 'testit_common/query', :locals => {
+            :query => @query, :issues => @issues,
+            :query_form_id => query_form_id,
+            :query_submit_url => query_submit_url,
+            :query_list_dest_id => query_list_dest_id } 
+%>
+
+
+<%= form_tag( query_submit_url,
+             :method => :get, :id => "#{query_form_id}") do %>
    <div id="query_form_with_buttons" class="hide-when-print">
        <%= hidden_field_tag 'set_filter', '1' %>
        <div id="query_form_content">
@@ -37,11 +46,11 @@
        </div>
        <p class="buttons">
        <%#= link_to_function l(:button_apply), 'submit_query_form("query_form")', :class => 'icon icon-checked' %>
-       <%= link_to_function l(:button_apply), "$('#query_form').submit();", :class => 'icon icon-checked' %>
-       <%= link_to_function l(:button_clear), "ajx('#{partial_query_common_options({:set_filter => 1})}','issue-list')", :class => 'icon icon-reload' %>
+       <%= link_to_function l(:button_apply), "$('##{query_form_id}').submit();", :class => 'icon icon-checked' %>
+       <%= link_to_function l(:button_clear), "ajx('#{url_for query_submit_url.merge(:set_filter => 1)}','#{query_list_dest_id}')", :class => 'icon icon-reload' %>
           <% if @query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %>
              <%= link_to_function l(:button_save),
-                "$('#query_form').attr('action','#{ @project ? new_project_query_path(@project) : new_query_path }').submit()",
+                 "$('##{query_form_id}').attr('action','#{ @project ? new_project_query_path(@project) : new_query_path }').submit()",
                 :class => 'icon icon-save' %>
           <% end %>
        </p>
@@ -49,19 +58,19 @@
 <% end %>
 
 <script>
-$("#query_form").submit(function(e) {
+$('#<%=query_form_id%>').submit(function(e) {
     var postData = $(this).serializeArray();
     var formURL = $(this).attr("action");
     $.ajax({
         url : formURL,
-        type: "get",
+        type: 'get',
         data : postData,
         beforeSend: function(){
             $('#ajax-indicator').show();
         },
         success: function(data, textStatus, jqXHR)  {
             $('#ajax-indicator').hide();
-            $('#issue-list').html(data);
+            $('#<%=query_list_dest_id%>').html(data);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             $('#ajax-indicator').hide();

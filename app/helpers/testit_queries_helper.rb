@@ -9,21 +9,21 @@ module TestitQueriesHelper
     def column_value(column, issue, value)
         case column.name
         when :id
-            link_to_function issue.id, "showIssue(#{issue.id},'#{url_for_show_testit_issue}');"
+            link_to_function issue.id, "showIssue('#{url_for_show_testit_issue(issue)}');"
         when :subject
-            link_to_function issue.subject, "showIssue(#{issue.id},'#{url_for_show_testit_issue}');"
+            link_to_function issue.subject, "showIssue('#{url_for_show_testit_issue(issue)}');"
         else
             super
         end
     end
-    
+
     # to override in controllers
     def the_query
         {:key=>:query, :klass => IssueQuery}
     end
 
     def retrieve_query
-      # params[:values][:tracker_id] = [ "#{@settings.test_case_tracker}", "#{@settings.test_suite_tracker}"]
+        # params[:values][:tracker_id] = [ "#{@settings.test_case_tracker}", "#{@settings.test_suite_tracker}"]
         if !params[:query_id].blank?
             cond = "project_id IS NULL"
             cond << " OR project_id = #{@project.id}" if @project

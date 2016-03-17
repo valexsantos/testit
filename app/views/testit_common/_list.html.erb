@@ -1,18 +1,27 @@
 <%# Tabela %>
+<%#
+    render :partial => 'testit_common/list', :locals => {
+          :issues => @issues, :query => @query,
+          :table_form_id => table_form_id,
+          :table_show_select_all => table_show_select_all} 
+
+%>
 
 <%= form_tag({}) do -%>
 <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
 <div class="autoscroll">
     <%# TODO FIX id for relations. para poder reusar esta view, a form tem de ter id proprio 
         TODO FIX caso contrario os valores vem da view principal %>
-    <table id="table-issue-list" class="list issues <%= sort_css_classes %>">
+    <table id="<%=table_form_id%>" class="list issues <%= sort_css_classes %>">
       <thead>
-        <tr>
+          <tr>
+            <%if table_show_select_all %>
             <th class="checkbox hide-when-print">
                         <%= check_box_tag 'check_all', '', false, :class => 'toggle-selection',
                               :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
+           </th>
+           <%end%>
 
-          </th>
           <% @query.inline_columns.each do |column| %>
             <%= column_header(column) %>
           <% end %>
@@ -34,7 +43,9 @@
         <% previous_group = group %>
       <% end %>
       <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %>">
+            <%if table_show_select_all %>
           <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false,:id => nil) %></td>
+          <% end %>
         <%= raw @query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>"}.join %>
       </tr>
       <% @query.block_columns.each do |column|
@@ -50,10 +61,12 @@
   </div>
 <% end -%>
 
+<%if table_show_select_all %>
 <script>
 $(document).ready(function(){
   $('input[type=checkbox].toggle-selection').on('change', toggleIssuesSelection);
 });
 </script>
+<% end -%>
 
 

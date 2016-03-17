@@ -8,7 +8,7 @@
     <% if @prev_issue_id || @next_issue_id %>
         <div class="next-prev-links contextual">
             <%=if @prev_issue_id 
-                   link_to_function  "\xc2\xab #{l(:label_previous)}", "showIssue('#{@prev_issue_id}','#{url_for_show_testit_issue}')", 
+                   link_to_function  "\xc2\xab #{l(:label_previous)}", "showIssue('#{url_for_show_testit_issue(@prev_issue_id)}')", 
                        :title => "##{@prev_issue_id}", :accesskey => accesskey(:previous)
             else 
                 "\xc2\xab #{l(:label_previous)}"
@@ -17,7 +17,7 @@
                 <span class="position"><%= l(:label_item_position, :position => @issue_position, :count => @issue_count) %></span> |
             <% end %>
             <%=if @next_issue_id 
-                   link_to_function  "#{l(:label_next)} \xc2\xbb", "showIssue('#{@next_issue_id}','#{url_for_show_testit_issue}')", 
+                   link_to_function  "#{l(:label_next)} \xc2\xbb", "showIssue('#{url_for_show_testit_issue(@next_issue_id)}')", 
                        :title => "##{@next_issue_id}", :accesskey => accesskey(:next)
                else 
                    "#{l(:label_next)} \xc2\xbb"
@@ -92,15 +92,8 @@
         <% end %>
         <%= link_to_attachments @issue, :thumbnails => true %>
     <% end -%>
-  <%#= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
-    <% if @testit_relations.present? || User.current.allowed_to?(:manage_issue_relations, @project) %>
-        <hr />
-        <div id="testit_relations">
-            <%= render :partial => 'testit_relations/show', :locals=> { :issue => @issue, 
-                                                                        :testit_relations => @testit_relations, 
-                                                                        :project => @project} %>
-        </div>
-    <% end %>
+  
+    <%= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
 
   <% if !@issue.leaf? || User.current.allowed_to?(:manage_subtasks, @project) %>
       <hr />
