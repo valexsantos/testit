@@ -38,14 +38,14 @@ en:
   label_add_test_case: "Add test case"
   label_add_test_plan: "Add test plan"
 
-  label_testit_relation: "TestIt relations"
-  label_tests: "Tests"
-  label_tested_by: "Tested by"
-  label_part_of_test_case: "Part of test case"
-  label_has_test_run: "Test execution"
-  label_part_of_test_suite: "Part of test suite"
-  label_has_test_case: "Test case"
-  label_part_of_test_plan: "Part of test plan"
+  label_req_has_tc: "Tested by"
+  label_tc_part_of_req: "Tests"
+  lable_tc_has_tr:  "With"
+  lable_tr_part_of_tc: "In"
+  lable_tp_has_tc:  "With"
+  lable_tc_part_of_tp: "In"
+  lable_ts_has_tc: "With"
+  lable_tc_part_of_ts: "In"
 
   label_test_plan_coverage: "Coverage"
   label_test_plan_coverage_cases: "Coverage of Test"
@@ -80,6 +80,8 @@ en:
   label_execution_ts: "Executed"
   label_executor: "Executor"
   label_execution_status: "Status"
+
+
 
   label_filters_query: "Includes words "
   label_filters_keywords: "Keywords"

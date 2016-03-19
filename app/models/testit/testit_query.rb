@@ -23,7 +23,6 @@ module Testit
           qfs << values.map{|v| "'#{v[1]}'"}.join(',')
           qfs<<'))'
           available_filters["tracker_id"] = {:type=>:list, :values=>values,  :name=>"Tracker"}
-          p " ################## [#{qfs}]"
           @project_filter_statement = qfs
       end
       def statement

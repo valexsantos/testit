@@ -1,35 +1,28 @@
 module Testit
     class Relation < ActiveRecord::Base
-        # reqs
-        TYPE_TESTS         = "tests"         # test case testing the requirement
-        TYPE_TESTED_BY     = "tested_by"     # requirement tested by
-        # test_run / test_case
-        TYPE_PART_OF_TC    = "part_of_tc"    # test run for test case
-        TYPE_HAS_TR        = "has_tr"        # test case has test run
-        # test_suite / test_case, test_plan / test_case
-        TYPE_PART_OF_TS    = "part_of_ts"    # test case is part of this test suite
-        TYPE_HAS_TC        = "has_tc"        # test plan / test suite has this test case
-        TYPE_PART_OF_TP    = "part_of_tp"    # test case is part of this test plan
+        #
+        TYPE_REQ_HAS_TC     = "req_has_tc"
+        TYPE_TC_PART_OF_REQ = "tc_part_of_req"
+        TYPE_TC_HAS_TR      = "tc_has_tr"
+        TYPE_TR_PART_OF_TC  = "tr_part_of_tc"
+        TYPE_TP_HAS_TC      = "tp_has_tc"
+        TYPE_TC_PART_OF_TP  = "tc_part_of_tp"
+        TYPE_TS_HAS_TC      = "ts_has_tc"
+        TYPE_TC_PART_OF_TS  = "tc_part_of_ts"
 
-        #
-        #   label_tests: "Tests"
-        #   label_tested_by: "Tested by"
-        #   label_for_test_case : "For test case"
-        #   label_test_run : "Test execution"
-        #   label_part_of_test_suite : "Part of test suite"
-        #   label_has_test_case : "Has test case"
-        #   label_part_of_test_plan : "Part of test plan"
-        #
         TYPES = {
-            TYPE_TESTS     => { :name => :label_tests, :sym_name => :label_tested_by, :order => 1, :sym => TYPE_TESTS, :reverse => TYPE_TESTED_BY },
-            TYPE_TESTED_BY => { :name => :label_tested_by, :sym_name => :label_tests, :order => 2, :sym => TYPE_TESTED_BY, :reverse => TYPE_TESTS },
-            #
-            TYPE_PART_OF_TC => { :name => :label_part_of_test_case, :sym_name => :lable_has_test_run, :order => 3, :sym => TYPE_PART_OF_TC, :reverse => TYPE_HAS_TR},
-            TYPE_HAS_TR     => { :name => :label_has_test_run, :sym_name => :lable_part_of_test_case, :order => 4, :sym => TYPE_HAS_TR, :reverse => TYPE_PART_OF_TC},
-            #
-            TYPE_PART_OF_TS => { :name => :label_part_of_test_suite, :sym_name => :label_has_test_case, :order => 5, :sym => TYPE_PART_OF_TS, :reverse => TYPE_HAS_TC},
-            TYPE_HAS_TC     => { :name => :label_has_test_case, :sym_name => :label_part_of_test_suite, :order => 6, :sym => TYPE_HAS_TC, :reverse => TYPE_PART_OF_TS},
-            TYPE_PART_OF_TP => { :name => :label_part_of_test_plan,  :sym_name => :label_has_test_case, :order => 7, :sym => TYPE_PART_OF_TP, :reverse => TYPE_HAS_TC}
+            # naturaly not all fo this is necessary
+            TYPE_REQ_HAS_TC     => { :name => :label_req_has_tc, :sym_name => :label_tc_part_of_req, :order => 1, :sym => TYPE_REQ_HAS_TC, :reverse => TYPE_TC_PART_OF_REQ},
+            TYPE_TC_PART_OF_REQ => { :name => :label_tc_part_of_req, :sym_name => :label_req_has_tc, :order => 2, :sym => TYPE_TC_PART_OF_REQ, :reverse => TYPE_REQ_HAS_TC},
+
+            TYPE_TC_HAS_TR      => {:name => :lable_tc_has_tr, :sym_name => :lable_tr_part_of_tc, :order => 3, :sym => TYPE_TC_HAS_TR ,:reverse => TYPE_TR_PART_OF_TC },
+            TYPE_TR_PART_OF_TC  => {:name => :lable_tr_part_of_tc, :sym_name => :lable_tc_has_tr, :order => 4, :sym => TYPE_TR_PART_OF_TC ,:reverse => TYPE_TC_HAS_TR },
+
+            TYPE_TP_HAS_TC      => {:name => :lable_tp_has_tc, :sym_name => :lable_tc_part_of_tp, :order => 5, :sym => TYPE_TP_HAS_TC ,:reverse => TYPE_TC_PART_OF_TP },
+            TYPE_TC_PART_OF_TP  => {:name => :lable_tc_part_of_tp, :sym_name => :lable_tp_has_tc, :order => 6, :sym => TYPE_TC_PART_OF_TP ,:reverse => TYPE_TP_HAS_TC },
+            
+            TYPE_TS_HAS_TC      => {:name => :lable_ts_has_tc, :sym_name => :lable_tc_part_of_ts, :order => 7, :sym => TYPE_TS_HAS_TC ,:reverse => TYPE_TC_PART_OF_TS },
+            TYPE_TC_PART_OF_TS  => {:name => :lable_tc_part_of_ts, :sym_name => :lable_ts_has_tc, :order => 8, :sym => TYPE_TC_PART_OF_TS ,:reverse => TYPE_TS_HAS_TC },
         }
         # Class used to represent the relations of an issue
         class Relations < Array
@@ -74,7 +67,7 @@ module Testit
             super
             if new_record?
                 if relation_type.blank?
-                    self.relation_type = Relation::TYPE_TESTS
+                    self.relation_type = Relation::TYPE_REQ_HAS_TC
                 end
             end
         end
@@ -149,39 +142,6 @@ module Testit
             issue_to.init_journal(user) if issue_to
         end
 
-        def relations_for(issue)
-            x=[]
-            return unless issue
-
-            testit_settings=  Testit::Setting.find_by(:project_id => issue.project)
-            if testit_settings
-                a=nil
-                Testit::Setting::TrackersType.each { | tt |
-                    trc = testit_settings.tracker(tt)
-                    if trc.is_a?(Array)
-                        a=tt if trc.include?(issue.tracker)
-                    else
-                        a=tt if trc == issue.tracker
-                    end
-                    break if a
-                }
-                if a
-                    case a
-                    when Testit::Setting::RequirementTrackerType
-                        x = [ TYPE_TESTED_BY]
-                    when Testit::Setting::TestCaseTrackerType
-                        x = [ TYPE_TESTS, TYPE_HAS_TR, TYPE_PART_OF_TS, TYPE_PART_OF_TP]
-                    when Testit::Setting::TestSuiteTrackerType
-                        x = [ TYPE_HAS_TC ]
-                    when Testit::Setting::TestPlanTrackerType
-                        x = [ TYPE_HAS_TC ]
-                    when Testit::Setting::TestRunTrackerType
-                        x = [ TYPE_PART_OF_TC ]
-                    end
-                end
-            end
-            x.to_json
-        end
 
         private
 

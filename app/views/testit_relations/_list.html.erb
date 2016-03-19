@@ -12,7 +12,7 @@
   <td class="start_date"><%= format_date(other_issue.start_date) %></td>
   <td class="due_date"><%= format_date(other_issue.due_date) %></td>
   <td class="buttons"><%= link_to image_tag('link_break.png'),
-                                  relation_path(relation),
+      url_for(:controller => 'testit_relations', :action => 'destroy', :id => relation, :issue_id => @issue, :project_id => @project),
                                   :remote => true,
                                   :method => :delete,
                                   :data => {:confirm => l(:text_are_you_sure)},

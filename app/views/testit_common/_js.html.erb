@@ -106,6 +106,7 @@ function showIssue(the_url) {
         },
         success: function(data){
            $(document).trigger('view-issue', [data]);
+           $('#testit-view').attr('reload',the_url);
            $('#ajax-indicator').hide();
         },
         error: function(xhr){
@@ -207,7 +208,7 @@ function add_testit_rel(the_url, issue_id) {
     $.ajax({
         url: the_url,
         type: 'get',
-        data: { id: issue_id },
+        data: { issue_id: issue_id },
         beforeSend: function(){
             $('#ajax-indicator').show();
         },
@@ -222,14 +223,19 @@ function add_testit_rel(the_url, issue_id) {
         });
     return false;
 }
-function createRelation(form_id) {
+// TODO FIX - add parent form
+function createRelation(form_id, issue_id, relation_type, action_id) {
     // var formData =  $('#'+form_id).serialize();
     var formData = $('#'+form_id).parents('form').first().serialize();
-    console.log(formData);
+    /*
+     * TODO  formData : $('#form1, #form2').serialize(),
+     */
+    //console.log(formData);
     $.ajax({
-        url: "<%=url_for :controller => 'testit_relations', :action => :create%>",
+        url: "<%=url_for :controller => 'testit_relations', :action => :create, :project_id => @project%>",
         type: 'post',
-        data: formData,
+        // TODO FIX formData
+        data: formData+'&issue_id='+issue_id+'&relation='+relation_type+'&action='+action_id,
         beforeSend: function(){
             $('#ajax-indicator').show();
         },
@@ -249,7 +255,7 @@ function createRelation(form_id) {
 
 function add_test_case(p) {
     $.ajax({
-        url: "<%=url_for :controller => 'testit_tests', :action => :new%>",
+        url: "<%=url_for :controller => 'testit_tests', :action => :new, :project_id => @project%>",
         type: 'get',
         data: { modal : 'true'},
         beforeSend: function(){
@@ -269,7 +275,7 @@ function add_test_case(p) {
 
 function add_test_suite(p) {
     $.ajax({
-        url: "<%=url_for :controller => 'testit_suites', :action => :new%>",
+        url: "<%=url_for :controller => 'testit_suites', :action => :new, :project_id => @project%>",
         type: 'get',
         data: merge_options({ modal : 'true'}, params),
         beforeSend: function(){
@@ -288,7 +294,7 @@ function add_test_suite(p) {
 };
 function add_test_plan(p) {
     $.ajax({
-        url: "<%=url_for :controller => 'testit_plans', :action => :new%>",
+        url: "<%=url_for :controller => 'testit_plans', :action => :new, :project_id => @project%>",
         type: 'get',
         data: merge_options({ modal : 'true'}, params),
         beforeSend: function(){
@@ -337,6 +343,9 @@ function hideTestitModal(el) {
 /*
  * Event driven
  */
+$(document).bind('reload-issue', function(e, data) {
+          ajx($('#testit-view').attr('reload'),'testit-view');
+});
 $(document).bind('view-issue', function(e, data) {
    $('#testit-view').html(data);
 });

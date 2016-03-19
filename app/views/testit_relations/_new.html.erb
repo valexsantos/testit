@@ -7,7 +7,7 @@
 <span id="dialog-title" style="display:none"><%=title%></span>
 
 
-<%= form_for @testit_relation, :url => { :controller => :testit_relations, :action => :create, :issue => @issue}, 
+<%= form_for @testit_relation, :url => { :controller => :testit_relations, :action => :create, :issue => @issue, :relation_type => @relation_type, :issue_from => @issue}, 
     :html => { :id => "testit-relation-form", :multipart => true, :title => title} do |f| %>
 
     <%= hidden_field_tag 'issue', @issue.id %>
@@ -25,7 +25,7 @@
         } %>
     </div>
 
-    <%= submit_tag l(:button_create), :name => nil, :onclick => "createRelation('rel-table-issue-list');",  :type => 'button'  %>
+    <%= submit_tag l(:button_create), :name => nil, :onclick => "createRelation('rel-table-issue-list','#{@issue.id}', '#{@relation_type}','#{@op}');",  :type => 'button'  %>
     <%= submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button' %>
 
 <%end%>

@@ -12,7 +12,7 @@ module Testit
 
             context[:controller].send(:render_to_string, {
                 :partial => "testit_relations/show.hook",
-                :locals => context.merge( :@settings => Testit::Setting.find_by(:project_id => issue.project))
+                :locals => context.merge( :@setting => Testit::Setting.find_by(:project_id => issue.project))
             })
         end
 
