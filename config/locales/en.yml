@@ -24,7 +24,7 @@ en:
   label_test_plan_plural: "Test plans"
   label_test_case_plural: "Test cases"
   label_test_suite_plural: "Test suites"
-  label_test_execution_plural: "Test executions"
+  label_test_run_plural: "Test executions"
   label_requirement_plural: "Requirements"
   label_testit_plan_new: "Add test plans"
   label_test_plans_list: "test plans list"

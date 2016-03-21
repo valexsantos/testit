@@ -203,10 +203,17 @@ class TestitRelationsController < ApplicationController
 
   def find_setting
       begin
-          @setting = Testit::Setting.find_by(:project_id => @project) || Testit::Setting.create(:project_id => @project.id)
+          @setting = Testit::Setting.find_by(:project_id => @project)
       rescue ActiveRecord::RecordNotFound
           render_404
       end
+  end
+
+  def find_issue
+      @issue = Issue.find(params[:issue_id])
+      @project = @issue.project
+  rescue ActiveRecord::RecordNotFound
+      render_404
   end
 
   def calc_relation_type(op)
@@ -246,6 +253,7 @@ class TestitRelationsController < ApplicationController
           end
       end
   end
+
 
 
 end

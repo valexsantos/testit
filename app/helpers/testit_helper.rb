@@ -68,4 +68,37 @@ module TestitHelper
         s = h("#{issue.project} - ") + s if options[:project]
         s
     end
+
+
+    def find_issues
+        @issues = Issue.find(params[:ids])
+    rescue ActiveRecord::RecordNotFound
+        render_404
+    end
+    
+    def find_issue
+        @issue = Issue.find(params[:id])
+        @project = @issue.project
+    rescue ActiveRecord::RecordNotFound
+        render_404
+    end
+
+    def find_project
+        begin
+            @project = Project.find(params[:project_id])
+        rescue ActiveRecord::RecordNotFound
+            render_404
+        end
+    end
+
+    def find_setting
+        begin
+            @setting = Testit::Setting.find_by(:project_id => @project)
+        rescue ActiveRecord::RecordNotFound
+            render_404
+        end
+    end
+
+
+
 end

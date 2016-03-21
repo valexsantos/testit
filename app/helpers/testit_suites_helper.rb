@@ -1,6 +1,6 @@
 require 'application_helper'
 
-module TestitPlansHelper
+module TestitSuitesHelper
     
     def partial_query_common_options(options={})
         { :controller => 'testit_suites', :action => 'index', :project_id => @project,

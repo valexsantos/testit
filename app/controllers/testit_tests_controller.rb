@@ -2,6 +2,7 @@ class TestitTestsController < ApplicationController
   unloadable
 
   before_filter :find_project 
+  before_filter :find_setting
   before_filter :find_issue, :only => [:show, :edit, :update, :add_ts, :add_tr]
   before_filter :find_issues, :only => [:destroy]
   before_filter :authorize, :except => [:index, :new, :create, :add_ts, :add_tr]
@@ -27,6 +28,7 @@ class TestitTestsController < ApplicationController
 
   include TestitIssuesAbstractController
   include TestitTestsHelper
+  include TestitHelper
 
   def the_query
       {:key=>:test_query, :klass => Testit::TestsQuery}
@@ -75,6 +77,7 @@ class TestitTestsController < ApplicationController
   # /photos/new
   def new
       super
+      @tracker = @setting.tracker(Testit::Setting::TestCaseTrackerType)
       respond_to do | format | 
           format.html { render :layout => !request.xhr? }
           format.js

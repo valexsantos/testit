@@ -1,6 +1,6 @@
 
 <div class="contextual">
-    <% if User.current.allowed_to?(:manage_testplans, nil, :global => true) %>
+    <% if User.current.allowed_to?(:manage_testcases, nil, :global => true) %>
         <%= link_to_function l(:label_add_test_plan), 'add_test_plan(this)', :class => 'icon icon-add' %>
     <% end %>
 </div>

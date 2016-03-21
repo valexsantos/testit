@@ -2,6 +2,7 @@ class TestitSuitesController < ApplicationController
   unloadable
 
   before_filter :find_project 
+  before_filter :find_setting
   before_filter :find_issue, :only => [:show, :edit, :update]
   before_filter :find_issues, :only => [:destroy]
   before_filter :authorize, :except => [:index, :new, :create]
@@ -28,26 +29,13 @@ class TestitSuitesController < ApplicationController
 
   include TestitIssuesAbstractController
 
+  include TestitSuitesHelper
+  include TestitHelper
+
   def the_query
       {:key=>:suites_query, :klass => Testit::SuitesQuery}
   end
 
-  # GET display a list of all events
-  # /photos
-  def index
-      @settings = Testit::Setting.find_by(:project_id => @project)
-      super
-      # TODO  "f"=>{"tracker_id"=>"="}, "v"=>{"tracker_id"=>["4", "5"]}
-      # A query apenas deve devolver issues do tipo test_case e test_suite
-      respond_to do | format | 
-          if params[:table]
-              # TODO FIX isto e' o reload da tabela 
-              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, :locals => {:query => @query, :issues => @issues} }
-          else
-              format.html { render :layout => !request.xhr? }
-          end
-      end
-  end
   # GET display a specific event
   # /photos/:id
   def show
@@ -68,6 +56,7 @@ class TestitSuitesController < ApplicationController
   # /photos/new
   def new
       super
+      @tracker = @setting.tracker(Testit::Setting::TestSuiteTrackerType)
       respond_to do | format | 
           format.html { render :layout => !request.xhr? }
           format.js
@@ -89,7 +78,6 @@ class TestitSuitesController < ApplicationController
   def create
       if super
           flash[:notice] = l(:notice_test_case_created)
-          # redirect_to :controller=> :testit, :action => :index, :project_id => @project
           redirect_to  :controller => :testit_tests, :action => :show, :project_id => @project, :id => @issue
       else
           flash[:error] = l(:failed_to_create) 

@@ -2,6 +2,7 @@ class TestitPlansController < ApplicationController
   unloadable
 
   before_filter :find_project
+  before_filter :find_setting
   before_filter :find_issue, :only => [:show, :edit, :update]
   before_filter :find_issues, :only => [:destroy]
   before_filter :authorize, :except => [:index, :new, :create]
@@ -19,6 +20,7 @@ class TestitPlansController < ApplicationController
   helper :repositories
   helper :timelog
   #
+  helper :testit
   helper :testit_sort
   helper :testit_queries
   helper :testit_issues
@@ -26,6 +28,7 @@ class TestitPlansController < ApplicationController
 
   include TestitIssuesAbstractController
   include TestitPlansHelper
+  include TestitHelper
 
   def the_query
       {:key=>:plans_query, :klass => Testit::PlansQuery}
@@ -41,7 +44,7 @@ class TestitPlansController < ApplicationController
               # TODO FIX isto e' o reload da tabela 
               format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
                             :locals => {:query => @query, :issues => @issues,
-                            :title => l(:label_test_case_plural),
+                            :title => l(:label_test_plan_plural),
                             :available_formats => ['Atom', 'CSV', 'PDF'],
                             :query_form_id => 'query-form',
                             :query_submit_url => partial_query_common_options,
@@ -67,6 +70,7 @@ class TestitPlansController < ApplicationController
   # /photos/new
   def new
       super
+      @tracker = @setting.tracker(Testit::Setting::TestPlanTrackerType)
       respond_to do | format | 
           format.html { render :layout => !request.xhr? }
       end
@@ -85,8 +89,8 @@ class TestitPlansController < ApplicationController
   # /photos
   def create
       super
-      flash[:notice] = l(:notice_test_case_created)
-      redirect_to :controller=> :testit, :action => :index, :project_id => @project
+      flash[:notice] = l(:notice_test_plan_created)
+      redirect_to  :action => :show, :project_id => @project, :id => @issue
   rescue 
       flash[:error] = $!.message
       redirect_to :action => :new, :project_id => @project
@@ -97,7 +101,7 @@ class TestitPlansController < ApplicationController
       if super
           render_attachment_warning_if_needed(@issue)
           flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
-          redirect_to :controller=> :testit, :action => :index, :project_id => @project
+          redirect_to  :action => :show, :project_id => @project, :id => @issue
       else
           redirect_to :action => :edit, :project_id => @project
       end

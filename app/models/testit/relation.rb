@@ -11,7 +11,6 @@ module Testit
         TYPE_TC_PART_OF_TS  = "tc_part_of_ts"
 
         TYPES = {
-            # naturaly not all fo this is necessary
             TYPE_REQ_HAS_TC     => { :name => :label_req_has_tc, :sym_name => :label_tc_part_of_req, :order => 1, :sym => TYPE_REQ_HAS_TC, :reverse => TYPE_TC_PART_OF_REQ},
             TYPE_TC_PART_OF_REQ => { :name => :label_tc_part_of_req, :sym_name => :label_req_has_tc, :order => 2, :sym => TYPE_TC_PART_OF_REQ, :reverse => TYPE_REQ_HAS_TC},
 
@@ -35,6 +34,20 @@ module Testit
 
             def to_s(*args)
                 map {|relation| relation.to_s(@issue)}.join(', ')
+            end
+
+            # filter relation type
+            # e.g. 
+            # where(:relation_type => 'req_has_tc')
+            def where(options={})
+               map{|relation| relation if relation 
+                   x = true
+                   options.each { | k,v | 
+                       x = x && relation.send(k) == v
+                       break if !x
+                   }
+                   relation if x
+               }
             end
         end
 

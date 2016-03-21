@@ -54,22 +54,34 @@ class SetupTestitTrackers < ActiveRecord::Migration
             :is_closed => false
         ).first_or_create
         # 
+        tracker_position = Tracker.all.size + 1
+        #
         testcase_tracker =  Tracker.where(
-            :name => 'Test case',
+            :name => 'Test casinho',
             :default_status => new_status
         ).first_or_create
+        testcase_tracker = tracker_position
+        tracker_position = tracker_position + 1
+        #
         testsuite_tracker =  Tracker.where(
             :name => 'Test suite',
             :default_status => new_status
         ).first_or_create
+        testsuite_tracker = tracker_position
+        tracker_position = tracker_position + 1
+        #
         testplan_tracker =  Tracker.where(
             :name => 'Test plan',
             :default_status => new_status
         ).first_or_create
-        testexecution_tracker =  Tracker.where(
+        testplan_tracker = tracker_position
+        tracker_position = tracker_position + 1
+        #
+        testrun_tracker =  Tracker.where(
             :name => 'Test execution',
             :default_status => na_status
         ).first_or_create
+        testrun_tracker = tracker_position
         # workflow
         Role.all.each { |role|
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => new_status, :new_status => in_progress_status)
@@ -115,26 +127,26 @@ class SetupTestitTrackers < ActiveRecord::Migration
             WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => rejected_status,  :new_status => new_status)
             #
             #
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :new_status => na_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :new_status => passed_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :new_status => failed_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :new_status => blocked_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :new_status => na_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :new_status => passed_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :new_status => failed_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :new_status => blocked_status)
             #
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => na_status,  :new_status => passed_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => na_status,  :new_status => failed_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => na_status,  :new_status => blocked_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => na_status,  :new_status => passed_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => na_status,  :new_status => failed_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => na_status,  :new_status => blocked_status)
             #
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => passed_status,  :new_status => na_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => passed_status,  :new_status => failed_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => passed_status,  :new_status => blocked_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => passed_status,  :new_status => na_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => passed_status,  :new_status => failed_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => passed_status,  :new_status => blocked_status)
             #
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => failed_status,  :new_status => passed_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => failed_status,  :new_status => na_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => failed_status,  :new_status => blocked_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => failed_status,  :new_status => passed_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => failed_status,  :new_status => na_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => failed_status,  :new_status => blocked_status)
             #
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => blocked_status,  :new_status => passed_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => blocked_status,  :new_status => failed_status)
-            WorkflowTransition.create!(:tracker => testexecution_tracker, :role => role , :old_status => blocked_status,  :new_status => na_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => blocked_status,  :new_status => passed_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => blocked_status,  :new_status => failed_status)
+            WorkflowTransition.create!(:tracker => testrun_tracker, :role => role , :old_status => blocked_status,  :new_status => na_status)
         }
 
     end

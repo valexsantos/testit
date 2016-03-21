@@ -1,0 +1,57 @@
+<%#
+      :locals => {
+          :title => l(xx),
+          :available_formats => ['Atom', 'CSV', 'PDF'],
+          :query_form_id => 'query-form',
+          :query_submit_url => partial_query_common_options,
+          :query_list_dest_id => 'issue-list',
+          :table_form_id => 'table-issue-list',
+          :table_show_select_all => true
+      }
+
+
+  Isto deve partir o JS do redmine se a query nao se chamar query-form
+
+%>
+
+<%# Issue list query filters and table %>
+
+ <div class="contextual">
+     <% if !@query.new_record? && @query.editable_by?(User.current) %>
+         <%= link_to l(:button_edit), edit_query_path(@query), :class => 'icon icon-edit' %>
+         <%= delete_link query_path(@query) %>
+     <% end %>
+ </div>
+
+ <h2><%= @query.new_record? ? title : @query.name %></h2>
+ <%= render :partial => 'testit_common/query', :locals => {:query => @query, :issues => @issues, 
+                                                           :query_form_id => query_form_id,
+                                                           :query_submit_url => query_submit_url,
+                                                           :query_list_dest_id => query_list_dest_id } %>
+
+ <% if @query.valid? %>
+    <% if @issues.empty? %>
+       <p class="nodata"><%= l(:label_no_data) %></p>
+    <% else %>
+        <%= render_query_totals(@query) %>
+        <%= render :partial => 'testit_common/list', :locals => {:issues => @issues, :query => @query,  
+                                                                 :table_form_id => table_form_id, 
+                                                                 :table_show_select_all => table_show_select_all} %>
+        <%# TODO %>
+        <%#= render :partial => 'testit_runs/list', :locals => {:issues => @issues, :query => @query,  
+                                                                 :table_form_id => table_form_id, 
+                                                                 :table_show_select_all => table_show_select_all} %>
+       <%# TODO XXX fix pagination. definido num modulo dentro de lib/redmine/pagination.rb ... %>
+       <% 
+           # view partial_query_common_options
+           x=pagination_links_full @issue_pages, @issue_count
+           x.gsub!( /href=\"(.*?)\"/,'href="#" onclick="loadIssueListbyUrl(\'\1\');"')
+       %>
+       <span class="pagination"><%=raw x%></span>
+    <% end %>
+
+    <% if available_formats && !available_formats.empty? %>
+    <%= render :partial => 'testit_common/other_formats', :locals => {:query => @query, :available_formats => available_formats} %>
+    <% end %>
+
+<% end %>

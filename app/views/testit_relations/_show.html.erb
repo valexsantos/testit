@@ -19,7 +19,7 @@
 
 
 <% if @testit_relations.present? %>
-    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => @testit_relations, :issue => @issue, :tracker_type => "xxx"}%>
+    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => testit_relations, :issue => @issue, :tracker_type => "xxx"}%>
 <% end %>
 
 </div>

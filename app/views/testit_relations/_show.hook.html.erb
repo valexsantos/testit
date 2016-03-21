@@ -37,7 +37,7 @@ end
 
 <% if views[:req_list] %>
     <%= render :partial => 'testit_relations/show', :locals => {
-        :testit_relations => @testit_relations, 
+        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /req_has_tc|tc_part_of_req/}, 
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_req, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:label_requirement_plural),
@@ -47,7 +47,7 @@ end
 
 <% if views[:test_case_list] %>
     <%= render :partial => 'testit_relations/show', :locals => {
-        :testit_relations => @testit_relations, 
+        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /tc_part_of_req|tc_part_of_tp|tc_part_of_ts|tr_part_of_tc|req_has_tc|tp_has_tc/ },
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tc, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_tests),
@@ -57,7 +57,7 @@ end
 
 <% if views[:test_run_list] %>
     <%= render :partial => 'testit_relations/show', :locals => {
-        :testit_relations => @testit_relations, 
+        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /tc_has_tr|tr_part_of_tc/}, 
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tr, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_executions),
@@ -67,7 +67,7 @@ end
 
 <% if views[:test_suite_list] %>
     <%= render :partial => 'testit_relations/show', :locals => {
-        :testit_relations => @testit_relations, 
+        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /ts_has_tc|tc_part_of_ts/ },
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_ts, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_suites),
@@ -77,7 +77,7 @@ end
 
 <% if views[:test_plan_list] %>
     <%= render :partial => 'testit_relations/show', :locals => {
-        :testit_relations => @testit_relations, 
+        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /tp_has_tc|tc_part_of_tp/ }, 
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tp, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_plans),

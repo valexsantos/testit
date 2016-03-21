@@ -14,11 +14,7 @@
 <% end %>
 
 <% if @issue.safe_attribute? 'tracker_id' %>
-    <% if @issue.new_record? %>
     <p><%= f.select :tracker_id, [[@tracker.name, @tracker.id]],  :required => true,  :selected => @tracker.id %></p>
-    <% else %>
-    <p><%= f.select :tracker_id, [[@issue.tracker.name, @issue.tracker.id]],  :required => true,  :selected => @issue.tracker.id %></p>
-    <% end%>
 <% end %>
 
 <% if @issue.safe_attribute? 'subject' %>

@@ -25,6 +25,9 @@ module Testit
           available_filters["tracker_id"] = {:type=>:list, :values=>values,  :name=>"Tracker"}
           @project_filter_statement = qfs
       end
+      def append_to_filter_statement(qfs)
+          @project_filter_statement << qfs
+      end
       def statement
           x=super
           x<<@project_filter_statement
