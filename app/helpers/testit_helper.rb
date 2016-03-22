@@ -62,13 +62,44 @@ module TestitHelper
             end
         end
         only_path = options[:only_path].nil? ? true : options[:only_path]
-        s =  link_to_function(text, "showIssue('#{url_for_show_testit_issue(issue)}');",  :class => issue.css_classes, :title => title)
+        s =  link_to_function(text, "showIssue('#{url_for_testit_issue(:issue_id => issue.id, :tracker_id => issue.tracker_id, :action => 'show')}');",  :class => issue.css_classes, :title => title)
         #     s = link_to(text, issue_url(issue, :only_path => only_path),:class => issue.css_classes, :title => title)
         s << h(": #{subject}") if subject
         s = h("#{issue.project} - ") + s if options[:project]
         s
     end
 
+    #
+    def url_for_testit_issue(options={})
+        @project ||= Project.find(issue.project)
+        @setting ||= find_setting
+        tt = @setting.tracker_id_to_type( options[:tracker_id])
+        ctrl = 'xx'
+        case tt
+        when Testit::Setting::BugTrackerType
+            ctrl = 'testit_issues'
+        when Testit::Setting::RequirementTrackerType
+            ctrl = 'testit_issues'
+        when Testit::Setting::TestCaseTrackerType
+            ctrl = 'testit_tests'
+        when Testit::Setting::TestSuiteTrackerType
+            if options[:action] == 'index'
+                ctrl = 'testit_tests'
+            else
+                ctrl = 'testit_suites'
+            end
+        when Testit::Setting::TestPlanTrackerType
+            ctrl = 'testit_plans'
+        when Testit::Setting::TestRunTrackerType
+            ctrl = 'testit_runs'
+        else
+            ctrl = 'testit_issues'
+        end
+
+        x={ :controller => ctrl, :action => options[:action], :project_id => @project, :id => options[:issue_id]}
+        x.merge(options[:params]) if options[:params]
+        url_for(x)
+    end
 
     def find_issues
         @issues = Issue.find(params[:ids])

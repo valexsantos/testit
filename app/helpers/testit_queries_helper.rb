@@ -9,9 +9,9 @@ module TestitQueriesHelper
     def column_value(column, issue, value)
         case column.name
         when :id
-            link_to_function issue.id, "showIssue('#{url_for_show_testit_issue(issue)}');"
+            link_to_function issue.id, "showIssue('#{url_for_testit_issue(:issue_id => issue.id, :tracker_id => issue.tracker_id, :action => 'show')}');"
         when :subject
-            link_to_function issue.subject, "showIssue('#{url_for_show_testit_issue(issue)}');"
+            link_to_function issue.subject, "showIssue('#{url_for_testit_issue(:issue_id => issue.id, :tracker_id => issue.tracker_id, :action => 'show')}');"
         else
             super
         end

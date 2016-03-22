@@ -356,7 +356,7 @@ $(document).bind('update-issue-list', function(e, data) {
        var url = $('#issue-list').find('input[name=back_url]').val();
        if (url) {
           loadIssueListbyUrl(url);
-       } else {
+          } else {
           ajx('<%=url_for( :controller => "testit_issues", :action => "index", :project_id => @project,
                :table => true, :modal=> true)%>','issue-list');
        }

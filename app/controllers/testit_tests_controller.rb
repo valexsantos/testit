@@ -37,24 +37,22 @@ class TestitTestsController < ApplicationController
   # GET display a list of all events
   # /photos
   def index
-      @settings = Testit::Setting.find_by(:project_id => @project)
       super
-      respond_to do | format | 
-          if params[:table]
-              # TODO FIX isto e' o reload da tabela 
-              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
-                            :locals => {:query => @query, :issues => @issues,
-                            :title => l(:label_test_case_plural),
-                            :available_formats => ['Atom', 'CSV', 'PDF'],
-                            :query_form_id => 'query-form',
-                            :query_submit_url => partial_query_common_options,
-                            :query_list_dest_id => 'issue-list',
-                            :table_form_id => 'table-issue-list',
-                            :table_show_select_all => false}
-              } 
-          else
-              format.html { render :layout => !request.xhr? }
-          end
+      respond_to do | format |
+         if params[:table]
+             format.html{ render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
+                          :locals => {:query => @query, :issues => @issues,
+                                      :title => l(:label_test_case_plural),
+                                      :available_formats => ['Atom', 'CSV', 'PDF'],
+                                      :query_form_id => 'query-form',
+                                      :query_submit_url => partial_query_common_options,
+                                      :query_list_dest_id => 'issue-list',
+                                      :table_form_id => 'table-issue-list',
+                                      :table_show_select_all => false}
+             }
+         else 
+             format.html { render :layout => !request.xhr? }
+         end
       end
   end
   # GET display a specific event
@@ -64,7 +62,7 @@ class TestitTestsController < ApplicationController
       super
       respond_to do | format | 
           format.html { 
-            retrieve_previous_and_next_issue_ids
+            # TODO retrieve_previous_and_next_issue_ids
             render :layout => !request.xhr?
           }
           format.pdf  {
@@ -102,6 +100,7 @@ class TestitTestsController < ApplicationController
           # redirect_to :controller=> :testit, :action => :index, :project_id => @project
           redirect_to  :controller => :testit_tests, :action => :show, :project_id => @project, :id => @issue
       else
+          # TODO render errorr no redirect
           flash[:error] = l(:failed_to_create) 
           redirect_to :action => :new, :project_id => @project
       end

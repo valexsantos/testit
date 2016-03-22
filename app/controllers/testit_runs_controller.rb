@@ -2,6 +2,7 @@ class TestitRunsController < ApplicationController
   unloadable
 
   before_filter :find_project
+  before_filter :find_setting
   before_filter :find_issue, :only => [:show, :edit, :update]
   before_filter :find_issues, :only => [:destroy]
   before_filter :authorize, :except => [:index, :new, :create]
@@ -19,6 +20,7 @@ class TestitRunsController < ApplicationController
   helper :repositories
   helper :timelog
   #
+  helper :testit
   helper :testit_sort
   helper :testit_queries
   helper :testit_issues
@@ -32,23 +34,21 @@ class TestitRunsController < ApplicationController
       {:key=>:runs_query, :klass => Testit::RunsQuery}
   end
 
-
   # GET display a list of all events
   # /photos
   def index
       super
       respond_to do | format | 
           if params[:table]
-              # TODO FIX isto e' o reload da tabela 
-              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
-                            :locals => {:query => @query, :issues => @issues,
-                            :title => l(:label_test_run_plural),
-                            :available_formats => ['Atom', 'CSV', 'PDF'],
-                            :query_form_id => 'query-form',
-                            :query_submit_url => partial_query_common_options,
-                            :query_list_dest_id => 'issue-list',
-                            :table_form_id => 'table-issue-list',
-                            :table_show_select_all => false}
+              format.html{ render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
+                           :locals => {:query => @query, :issues => @issues,
+                                       :title => l(:label_test_run_plural),
+                                       :available_formats => ['Atom', 'CSV', 'PDF'],
+                                       :query_form_id => 'query-form',
+                                       :query_submit_url => partial_query_common_options,
+                                       :query_list_dest_id => 'issue-list',
+                                       :table_form_id => 'table-issue-list',
+                                       :table_show_select_all => false}
               }
           else
               format.html { render :layout => !request.xhr? }
@@ -60,7 +60,13 @@ class TestitRunsController < ApplicationController
   def show
       super
       respond_to do | format | 
-          format.html { render :layout => !request.xhr? }
+          format.html { 
+            # TODO retrieve_previous_and_next_issue_ids
+            render :layout => !request.xhr?
+          }
+          format.pdf  {
+              send_file_headers! :type => 'application/pdf', :filename => "#{@project.identifier}-#{@issue.id}.pdf"
+          }
       end
   end
 

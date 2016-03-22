@@ -1,6 +1,6 @@
 
 <div class="contextual">
-     <%= link_to_function l(:button_edit), "editIssue('#{url_for_edit_testit_issue(@issue.id)}',this)", :class => 'icon icon-edit' if @issue.editable? %>
+    <%= link_to_function l(:button_edit), "editIssue('#{url_for_testit_issue(:issue_id => @issue.id, :tracker_id => @issue.tracker_id, :action => 'edit')}',this)", :class => 'icon icon-edit' if @issue.editable? %>
      <%= link_to l(:button_log_time), new_issue_time_entry_path(@issue), :class => 'icon icon-time-add' if User.current.allowed_to?(:log_time, @project) %>
      <%= watcher_link(@issue, User.current) %>
      <%= link_to l(:button_copy), project_copy_issue_path(@project, @issue), :class => 'icon icon-copy' if User.current.allowed_to?(:copy_issues, @project) && Issue.allowed_target_projects.any? %>

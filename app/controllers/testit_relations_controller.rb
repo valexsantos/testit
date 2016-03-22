@@ -11,6 +11,7 @@ class TestitRelationsController < ApplicationController
 
 
 
+  helper :testit
   helper :testit_sort
   helper :testit_queries
 

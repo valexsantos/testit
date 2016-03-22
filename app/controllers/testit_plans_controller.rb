@@ -34,23 +34,21 @@ class TestitPlansController < ApplicationController
       {:key=>:plans_query, :klass => Testit::PlansQuery}
   end
 
-
   # GET display a list of all events
   # /photos
   def index
       super
       respond_to do | format | 
           if params[:table]
-              # TODO FIX isto e' o reload da tabela 
-              format.html { render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
-                            :locals => {:query => @query, :issues => @issues,
-                            :title => l(:label_test_plan_plural),
-                            :available_formats => ['Atom', 'CSV', 'PDF'],
-                            :query_form_id => 'query-form',
-                            :query_submit_url => partial_query_common_options,
-                            :query_list_dest_id => 'issue-list',
-                            :table_form_id => 'table-issue-list',
-                            :table_show_select_all => false}
+              format.html{ render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
+                           :locals => {:query => @query, :issues => @issues,
+                                       :title => l(:label_test_plan_plural),
+                                       :available_formats => ['Atom', 'CSV', 'PDF'],
+                                       :query_form_id => 'query-form',
+                                       :query_submit_url => partial_query_common_options,
+                                       :query_list_dest_id => 'issue-list',
+                                       :table_form_id => 'table-issue-list',
+                                       :table_show_select_all => false}
               }
           else
               format.html { render :layout => !request.xhr? }
@@ -60,9 +58,16 @@ class TestitPlansController < ApplicationController
   # GET display a specific event
   # /photos/:id
   def show
+      @settings = Testit::Setting.find_by(:project_id => @project)
       super
       respond_to do | format | 
-          format.html { render :layout => !request.xhr? }
+          format.html { 
+            # TODO retrieve_previous_and_next_issue_ids
+            render :layout => !request.xhr?
+          }
+          format.pdf  {
+              send_file_headers! :type => 'application/pdf', :filename => "#{@project.identifier}-#{@issue.id}.pdf"
+          }
       end
   end
 

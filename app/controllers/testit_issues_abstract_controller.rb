@@ -6,6 +6,9 @@ module TestitIssuesAbstractController
     include TestitIssuesPathHelper
     include TestitQueriesHelper
 
+    def list
+        index
+    end
     # GET display a list of all events
     # /photos
     def index
@@ -272,7 +275,7 @@ module TestitIssuesAbstractController
             sort_update(@query.sortable_columns, 'issues_index_sort')
             limit = 500
             issue_ids = @query.issue_ids(:order => sort_clause, :limit => (limit + 1), :include => [:assigned_to, :tracker, :priority, :category, :fixed_version])
-            if (idx = issue_ids.index(@issue.id)) && idx < limit
+            if (idx = issue_ids.index([@issue.id, @issue.tracker_id])) && idx < limit
                 if issue_ids.size < 500
                     @issue_position = idx + 1
                     @issue_count = issue_ids.size

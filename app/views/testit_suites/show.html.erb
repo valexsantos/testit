@@ -5,25 +5,6 @@
 
 
 <div class="<%= @issue.css_classes %> details">
-    <% if @prev_issue_id || @next_issue_id %>
-        <div class="next-prev-links contextual">
-            <%=if @prev_issue_id 
-                   link_to_function  "\xc2\xab #{l(:label_previous)}", "showIssue('#{url_for_show_testit_issue(@prev_issue_id)}')", 
-                       :title => "##{@prev_issue_id}", :accesskey => accesskey(:previous)
-            else 
-                "\xc2\xab #{l(:label_previous)}"
-            end%>|
-            <% if @issue_position && @issue_count %>
-                <span class="position"><%= l(:label_item_position, :position => @issue_position, :count => @issue_count) %></span> |
-            <% end %>
-            <%=if @next_issue_id 
-                   link_to_function  "#{l(:label_next)} \xc2\xbb", "showIssue('#{url_for_show_testit_issue(@next_issue_id)}')", 
-                       :title => "##{@next_issue_id}", :accesskey => accesskey(:next)
-               else 
-                   "#{l(:label_next)} \xc2\xbb"
-            end%>
-        </div>
-    <% end %>
 
     <%= avatar(@issue.author, :size => "50") %>
 
@@ -93,39 +74,7 @@
         <%= link_to_attachments @issue, :thumbnails => true %>
     <% end -%>
   <%= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
-  <% if !@issue.leaf? || User.current.allowed_to?(:manage_subtasks, @project) %>
-      <hr />
-      <div id="issue_tree">
-          <div class="contextual">
-                <%= link_to_new_subtask(@issue) if User.current.allowed_to?(:manage_subtasks, @project) %>
-            </div>
-            <p><strong><%=l(:label_subtask_plural)%></strong></p>
-            <%= render_descendants_tree(@issue) unless @issue.leaf? %>
-        </div>
-    <% end %>
-
-    <% if @relations.present? || User.current.allowed_to?(:manage_issue_relations, @project) %>
-        <hr />
-        <div id="relations">
-            <%= render :partial => 'testit_common/relations'%>
-        </div>
-    <% end %>
 </div>
-
-<% if @changesets.present? %>
-    <div id="issue-changesets">
-        <h3><%=l(:label_associated_revisions)%></h3>
-        <%= render :partial => 'testit_common/changesets', :locals => { :changesets => @changesets} %>
-    </div>
-<% end %>
-
-<% if @journals.present? %>
-    <div id="history">
-        <h3><%=l(:label_history)%></h3>
-        <%= render :partial => 'testit_common/history', :locals => { :issue => @issue, :journals => @journals } %>
-    </div>
-<% end %>
-
 
 <%= render :partial => 'testit_common/other_formats', :locals => {:query => @query, :available_formats => ['Atom', 'PDF']} %>
 

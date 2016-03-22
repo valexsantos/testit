@@ -50,7 +50,7 @@
     <%= f.hidden_field :lock_version %>
     <%= hidden_field_tag 'last_journal_id', params[:last_journal_id] || @issue.last_journal_id %>
 
-    <%= submit_tag l(:button_update), :name => nil, :onclick => "updateIssue('#{url_for_update_testit_issue(@issue)}','issue-form');",  :type => 'button'  %>
+    <%= submit_tag l(:button_update), :name => nil, :onclick => "updateIssue('#{url_for_testit_issue(:issue_id => @issue.id, :tracker_id => @issue.tracker_id, :action => 'update')}','issue-form');",  :type => 'button'  %>
     <%= submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button' %>
     <%= preview_link preview_new_issue_path(:project_id => @issue.project), 'issue-form' %>
 <% end %>

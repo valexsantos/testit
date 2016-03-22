@@ -1,14 +1,14 @@
 
 <span id="dialog-title" style="display:none"><%=l(:title_create_test_plan)%></span>
 
-<%= labelled_form_for @issue, :url => url_for_create_testit_issue(@issue),
+<%= labelled_form_for @issue, :url => url_for_testit_issue(:issue_id => @issue.id, :tracker_id => @tracker.id, :action => 'create'),
     :html => { :id => "issue-form", :multipart => true, :title => l(:title_create_test_plan)} do |f| %>
 
   <%= error_messages_for 'issue' %>
   <%= hidden_field_tag 'copy_from', params[:copy_from] if params[:copy_from] %>
   <div class="box tabular">
     <div id="all_attributes">
-    <%= render :partial => 'testit_plans/form', :locals => {:f => f} %>
+    <%= render :partial => 'testit_common/form', :locals => {:f => f} %>
     </div>
 
     <% if @copy_from && Setting.link_copied_issue == 'ask' %>
@@ -48,7 +48,7 @@
   </div>
 
 
-  <%= submit_tag l(:button_create), :name => nil, :onclick => "createIssue('#{url_for_create_testit_issue(@issue)}','issue-form');",  :type => 'button'  %>
+  <%= submit_tag l(:button_create), :name => nil, :onclick => "createIssue('#{url_for_testit_issue(:issue_id => @issue.id, :tracker_id => @tracker.id, :action => 'create')}','issue-form');",  :type => 'button'  %>
     <%= submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button' %>
     <%= preview_link preview_new_issue_path(:project_id => @issue.project), 'issue-form' %>
 

@@ -1,7 +1,7 @@
 class TestitSuitesController < ApplicationController
   unloadable
 
-  before_filter :find_project 
+  before_filter :find_project
   before_filter :find_setting
   before_filter :find_issue, :only => [:show, :edit, :update]
   before_filter :find_issues, :only => [:destroy]
@@ -32,16 +32,12 @@ class TestitSuitesController < ApplicationController
   include TestitSuitesHelper
   include TestitHelper
 
-  def the_query
-      {:key=>:suites_query, :klass => Testit::SuitesQuery}
-  end
-
   # GET display a specific event
   # /photos/:id
   def show
       super
-      respond_to do | format | 
-          format.html { 
+      respond_to do | format |
+          format.html {
             retrieve_previous_and_next_issue_ids
             render :layout => !request.xhr?
           }
@@ -57,7 +53,7 @@ class TestitSuitesController < ApplicationController
   def new
       super
       @tracker = @setting.tracker(Testit::Setting::TestSuiteTrackerType)
-      respond_to do | format | 
+      respond_to do | format |
           format.html { render :layout => !request.xhr? }
           format.js
       end
@@ -67,7 +63,7 @@ class TestitSuitesController < ApplicationController
   # /photos/:id/edit
   def edit
       super
-      respond_to do | format | 
+      respond_to do | format |
           format.html { render :layout => !request.xhr? }
           format.js
       end
@@ -80,7 +76,7 @@ class TestitSuitesController < ApplicationController
           flash[:notice] = l(:notice_test_case_created)
           redirect_to  :controller => :testit_tests, :action => :show, :project_id => @project, :id => @issue
       else
-          flash[:error] = l(:failed_to_create) 
+          flash[:error] = l(:failed_to_create)
           redirect_to :action => :new, :project_id => @project
       end
   end

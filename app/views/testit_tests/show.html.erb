@@ -5,25 +5,12 @@
 
 
 <div class="<%= @issue.css_classes %> details">
-    <% if @prev_issue_id || @next_issue_id %>
-        <div class="next-prev-links contextual">
-            <%=if @prev_issue_id 
-                   link_to_function  "\xc2\xab #{l(:label_previous)}", "showIssue('#{url_for_show_testit_issue(@prev_issue_id)}')", 
-                       :title => "##{@prev_issue_id}", :accesskey => accesskey(:previous)
-            else 
-                "\xc2\xab #{l(:label_previous)}"
-            end%>|
-            <% if @issue_position && @issue_count %>
-                <span class="position"><%= l(:label_item_position, :position => @issue_position, :count => @issue_count) %></span> |
-            <% end %>
-            <%=if @next_issue_id 
-                   link_to_function  "#{l(:label_next)} \xc2\xbb", "showIssue('#{url_for_show_testit_issue(@next_issue_id)}')", 
-                       :title => "##{@next_issue_id}", :accesskey => accesskey(:next)
-               else 
-                   "#{l(:label_next)} \xc2\xbb"
-            end%>
-        </div>
-    <% end %>
+    <%= render :partial => 'testit_common/next_prev_links', :locals => {
+            :prev_issue_id => @prev_issue_id,
+            :next_issue_id => @next_issue_id,
+            :issue_position => @issue_position,
+            :issue_count => @issue_count
+    }%>
 
     <%= avatar(@issue.author, :size => "50") %>
 
@@ -38,41 +25,41 @@
     </p> 
 
     
-        <div class="attributes">
-            <%= issue_fields_rows do |rows|
-              rows.left l(:field_status), @issue.status.name, :class => 'status'
-              rows.left l(:field_priority), @issue.priority.name, :class => 'priority'
+    <div class="attributes">
+        <%= issue_fields_rows do |rows|
+            rows.left l(:field_status), @issue.status.name, :class => 'status'
+            rows.left l(:field_priority), @issue.priority.name, :class => 'priority'
 
-                unless @issue.disabled_core_fields.include?('assigned_to_id')
-                  rows.left l(:field_assigned_to), avatar(@issue.assigned_to, :size => "14").to_s.html_safe + (@issue.assigned_to ? link_to_user(@issue.assigned_to) : "-"), :class => 'assigned-to'
-                end
-                unless @issue.disabled_core_fields.include?('category_id') || (@issue.category.nil? && @issue.project.issue_categories.none?)
-                  rows.left l(:field_category), (@issue.category ? @issue.category.name : "-"), :class => 'category'
-                end
-                unless @issue.disabled_core_fields.include?('fixed_version_id') || (@issue.fixed_version.nil? && @issue.assignable_versions.none?)
-                  rows.left l(:field_fixed_version), (@issue.fixed_version ? link_to_version(@issue.fixed_version) : "-"), :class => 'fixed-version'
-                end
+            unless @issue.disabled_core_fields.include?('assigned_to_id')
+                rows.left l(:field_assigned_to), avatar(@issue.assigned_to, :size => "14").to_s.html_safe + (@issue.assigned_to ? link_to_user(@issue.assigned_to) : "-"), :class => 'assigned-to'
+            end
+            unless @issue.disabled_core_fields.include?('category_id') || (@issue.category.nil? && @issue.project.issue_categories.none?)
+                rows.left l(:field_category), (@issue.category ? @issue.category.name : "-"), :class => 'category'
+            end
+            unless @issue.disabled_core_fields.include?('fixed_version_id') || (@issue.fixed_version.nil? && @issue.assignable_versions.none?)
+                rows.left l(:field_fixed_version), (@issue.fixed_version ? link_to_version(@issue.fixed_version) : "-"), :class => 'fixed-version'
+            end
 
-                  unless @issue.disabled_core_fields.include?('start_date')
-                    rows.right l(:field_start_date), format_date(@issue.start_date), :class => 'start-date'
-                  end
-                  unless @issue.disabled_core_fields.include?('due_date')
-                    rows.right l(:field_due_date), format_date(@issue.due_date), :class => 'due-date'
-                  end
-                  unless @issue.disabled_core_fields.include?('done_ratio')
-                    rows.right l(:field_done_ratio), progress_bar(@issue.done_ratio, :legend => "#{@issue.done_ratio}%"), :class => 'progress'
-                  end
-                  unless @issue.disabled_core_fields.include?('estimated_hours')
-                    if @issue.estimated_hours.present? || @issue.total_estimated_hours.to_f > 0
-                      rows.right l(:field_estimated_hours), issue_estimated_hours_details(@issue), :class => 'estimated-hours'
-                    end
-                  end
-                  if User.current.allowed_to_view_all_time_entries?(@project)
-                    if @issue.total_spent_hours > 0
-                      rows.right l(:label_spent_time), issue_spent_hours_details(@issue), :class => 'spent-time'
-                    end
-                  end
-            end %>
+            unless @issue.disabled_core_fields.include?('start_date')
+                rows.right l(:field_start_date), format_date(@issue.start_date), :class => 'start-date'
+            end
+            unless @issue.disabled_core_fields.include?('due_date')
+                rows.right l(:field_due_date), format_date(@issue.due_date), :class => 'due-date'
+            end
+            unless @issue.disabled_core_fields.include?('done_ratio')
+                rows.right l(:field_done_ratio), progress_bar(@issue.done_ratio, :legend => "#{@issue.done_ratio}%"), :class => 'progress'
+            end
+            unless @issue.disabled_core_fields.include?('estimated_hours')
+                if @issue.estimated_hours.present? || @issue.total_estimated_hours.to_f > 0
+                    rows.right l(:field_estimated_hours), issue_estimated_hours_details(@issue), :class => 'estimated-hours'
+                end
+            end
+            if User.current.allowed_to_view_all_time_entries?(@project)
+                if @issue.total_spent_hours > 0
+                    rows.right l(:label_spent_time), issue_spent_hours_details(@issue), :class => 'spent-time'
+                end
+            end
+        end %>
         <%= render_custom_fields_rows(@issue) %>
         <%= call_hook(:view_issues_show_details_bottom, :issue => @issue) %>
     </div>
@@ -80,52 +67,21 @@
         <hr />
         <% if @issue.description? %>
             <div class="description">
-              <div class="contextual">
-              <%= link_to l(:button_quote), quoted_issue_path(@issue), :remote => true, :method => 'post', :class => 'icon icon-comment' if authorize_for('issues', 'edit') %>
-              </div>
-
+                <div class="contextual">
+                    <%= link_to l(:button_quote), quoted_issue_path(@issue), :remote => true, :method => 'post', :class => 'icon icon-comment' if authorize_for('issues', 'edit') %>
+                </div>
                 <p><strong><%=l(:field_description)%></strong></p>
                 <div class="wiki">
-                <%= textilizable @issue, :description, :attachments => @issue.attachments %>
+                    <%= textilizable @issue, :description, :attachments => @issue.attachments %>
                 </div>
             </div>
         <% end %>
         <%= link_to_attachments @issue, :thumbnails => true %>
     <% end -%>
-  <%= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
-  <% if !@issue.leaf? || User.current.allowed_to?(:manage_subtasks, @project) %>
-      <hr />
-      <div id="issue_tree">
-          <div class="contextual">
-                <%= link_to_new_subtask(@issue) if User.current.allowed_to?(:manage_subtasks, @project) %>
-            </div>
-            <p><strong><%=l(:label_subtask_plural)%></strong></p>
-            <%= render_descendants_tree(@issue) unless @issue.leaf? %>
-        </div>
-    <% end %>
+    <%# testit relations %>
+    <%= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
 
-    <% if @relations.present? || User.current.allowed_to?(:manage_issue_relations, @project) %>
-        <hr />
-        <div id="relations">
-            <%= render :partial => 'testit_common/relations'%>
-        </div>
-    <% end %>
 </div>
-
-<% if @changesets.present? %>
-    <div id="issue-changesets">
-        <h3><%=l(:label_associated_revisions)%></h3>
-        <%= render :partial => 'testit_common/changesets', :locals => { :changesets => @changesets} %>
-    </div>
-<% end %>
-
-<% if @journals.present? %>
-    <div id="history">
-        <h3><%=l(:label_history)%></h3>
-        <%= render :partial => 'testit_common/history', :locals => { :issue => @issue, :journals => @journals } %>
-    </div>
-<% end %>
-
 
 <%= render :partial => 'testit_common/other_formats', :locals => {:query => @query, :available_formats => ['Atom', 'PDF']} %>
 

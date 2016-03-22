@@ -16,7 +16,7 @@ Redmine::Plugin.register :testit do
     name 'TestIt'
     author 'Vasco Santos'
     description 'Test management tool'
-    version '0.0.8'
+    version '0.0.16'
     url 'https://github.com/valexsantos/testit'
     author_url 'https://github.com/valexsantos'
 
@@ -28,16 +28,16 @@ Redmine::Plugin.register :testit do
             'testit_issues' => [:index, :show ],
             'testit_suites' => [ :show ],
             'testit_tests'  => [:index, :show ],
-            'testit_plans'  => [:index, :show, :list ],
-            'testit_runs'   => [:index, :show],
+            'testit_plans'  => [:index, :show ],
+            'testit_runs'   => [:index, :show ],
             'testit_relations'   => [:show ],
             'testit_reports'     => [:index]
         }
         permission :manage_testcases, {
             'testit' => [:index ],
-            'testit_issues' => [:new, :edit, :destroy, :create, :update, :copy, :move],
-            'testit_suites' => [:new, :edit, :destroy, :create, :update, :copy, :move],
-            'testit_tests'  => [:new, :edit, :destroy, :create, :update, :copy, :move],
+            'testit_issues' => [:new, :edit, :destroy, :create, :update, :copy, :move ],
+            'testit_suites' => [:new, :edit, :destroy, :create, :update, :copy, :move ],
+            'testit_tests'  => [:new, :edit, :destroy, :create, :update, :copy, :move ],
             'testit_plans'  => [:new, :edit, :destroy, :create, :update, :copy ],
             'testit_runs'   => [:new, :edit, :destroy, :create, :update  ],
             'testit_relations'   => [:destroy, :create, :new_tc, :new_tr, :new_ts, :new_tp, :new_req ],

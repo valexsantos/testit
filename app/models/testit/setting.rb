@@ -57,18 +57,28 @@ module Testit
     end
 
     def issue_is_a?(testit_tracker_type, issue)
-        tk = self.tracker(testit_tracker_type)
-        if tk.is_a?(Array)
-            return tk.include?(issue.tracker)
-        else
-            return issue.tracker == tk
-        end
+        tracker_id_is_a?(testit_tracker_type,issue.tracker_id)
     end
 
     def tracker_type_of(issue)
+        tracker_id_to_type(issue.tracker_id)
+    end
+    # 
+    # XXX FIX TODO
+    #
+    def tracker_id_to_type(tracker_id)
         TrackersType.each { | tt |
-            return tt if issue_is_a?(tt,issue)
+            return tt if tracker_id_is_a?(tt,tracker_id)
         }
+        nil
+    end
+    def tracker_id_is_a?(testit_tracker_type, tracker_id)
+        tk = self.send(testit_tracker_type)
+        if tk.is_a?(Array)
+            return tk.include?("#{tracker_id}")
+        else
+            return tracker_id == tk
+        end
     end
 
   end
