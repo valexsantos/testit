@@ -36,7 +36,7 @@ class TestitRelationsController < ApplicationController
 
       respond_to do | format | 
           format.html { render :layout => !request.xhr?, :partial => 'testit_relations/show.hook' }
-      end
+     end
   end
 
   # POST create a new event

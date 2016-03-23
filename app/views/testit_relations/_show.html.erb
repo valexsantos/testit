@@ -8,12 +8,13 @@
 %>
   
 <div>
-    <hr/>
-<div class="contextual">
-<% if User.current.allowed_to?(:manage_issue_relations, @project) %>
+  <hr/>
+
+<% if add_relation_action && User.current.allowed_to?(:manage_issue_relations, @project) %>
+  <div class="contextual">
     <%= link_to_function l(:button_add), "#{add_relation_action}", :class => 'icon' %>
+  </div>
 <% end %>
-</div>
 
 <p><strong><%=title%></strong></p>
 

@@ -43,7 +43,7 @@
         <% previous_group = group %>
       <% end %>
       <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %>">
-            <%if table_show_select_all %>
+          <%if table_show_select_all %>
           <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false,:id => nil) %></td>
           <% end %>
         <%= raw @query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>"}.join %>

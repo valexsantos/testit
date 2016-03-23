@@ -22,7 +22,7 @@ class TestitRunsController < ApplicationController
   #
   helper :testit
   helper :testit_sort
-  helper :testit_queries
+#  helper :testit_queries
   helper :testit_issues
   helper :testit_runs
 
@@ -40,7 +40,7 @@ class TestitRunsController < ApplicationController
       super
       respond_to do | format | 
           if params[:table]
-              format.html{ render :partial=> "testit_common/issue_list", :layout => !request.xhr?, 
+              format.html{ render :partial=> "testit_runs/issue_list", :layout => !request.xhr?, 
                            :locals => {:query => @query, :issues => @issues,
                                        :title => l(:label_test_run_plural),
                                        :available_formats => ['Atom', 'CSV', 'PDF'],

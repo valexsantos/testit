@@ -1,0 +1,51 @@
+
+<%
+  # view for testit_relation
+  #
+  # locals:
+  #  :add_relation_action =>  "addTestRelation(this,'#{@issue.id}','#{@testit_relation.relations_for(@issue)}');" 
+  #  :title => <%=l(:label_testit_relation)
+%>
+
+<h3><strong><%=title%></strong></h3>
+<hr/>
+ <div class="list issues">
+  <% testit_relations.each do |relation| %>
+    <div class="<%= cycle('odd', 'even') %>">
+      <% other_issue = relation.other_issue(@issue) %>
+      <div class="subject">
+        <%= render_issue_subject_with_tree(other_issue) %>
+      </div>
+      <p class="author">
+        <%= authoring other_issue.created_on, other_issue.author %>.
+        <% if other_issue.created_on != other_issue.updated_on %>
+          <%= l(:label_updated_time, time_tag(other_issue.updated_on)).html_safe %>.
+        <% end %>
+      </p> 
+      <div class="attributes">
+        <% if other_issue.description? || other_issue.attachments.any? -%>
+            <hr />
+            <% if other_issue.description? %>
+                <div class="description">
+                    <p><strong><%=l(:field_description)%></strong></p>
+                    <div class="wiki">
+                    <%= textilizable other_issue, :description, :attachments => other_issue.attachments %>
+                    </div>
+                </div>
+            <% end %>
+        <% end -%>
+        <%= link_to_attachments other_issue, :thumbnails => true %>
+        <div class="splitcontent">
+          <div class="splitcontentleft">
+            <div class="attribute"><div class="label"><%=l(:field_status)%>:</div><div class="value"><%=other_issue.status.name %></div></div>
+          </div>
+          <div class="splitcontentleft">
+            <div class="attribute"><div class="label"><%=l(:field_updated_on)%>:</div><div class="value"><%=format_date(other_issue.updated_on) %></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+

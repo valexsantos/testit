@@ -7,76 +7,81 @@
 
 %>
 
+
+<style>
+#contentx {
+    overflow: auto;
+    border: 0px solid #666;
+    padding: 10px;
+    height: 400px;
+}
+</style>
+
 <%= form_tag({}) do -%>
 <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
-<div class="autoscroll">
+<div class="autoscroll" >
     <%# TODO FIX id for relations. para poder reusar esta view, a form tem de ter id proprio 
         TODO FIX caso contrario os valores vem da view principal %>
-    <table id="<%=table_form_id%>" class="list issues <%= sort_css_classes %>">
-      <thead>
-          <tr>
-            <%if table_show_select_all %>
-            <th class="checkbox hide-when-print">
-                        <%= check_box_tag 'check_all', '', false, :class => 'toggle-selection',
-                              :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
-           </th>
-           <%end%>
-
-          <% @query.inline_columns.each do |column| %>
-            <%= column_header(column) %>
-          <% end %>
-        </tr>
-      </thead>
-      <% previous_group = false %>
-      <tbody>
-      <% @issues.each do |issue | %>
+    
+<table id="<%=table_form_id%>" class="list issues <%= sort_css_classes %>">
+  <thead>
+     <tr>
+       <% @query.inline_columns.each do |column| %>
+         <%= column_header(column) %>
+       <% end %>
+     </tr>
+  </thead>
+  <% previous_group = false %>
+  <tbody>
+    <% @issues.each do |issue | %>
+          <%# TODO Move to controller %>
+          <% testit_relations = issue.testit_relations.select {|r| r.relation_type =~ /tc_has_tr|tr_part_of_tc/} %>
       <% if @query.grouped? && (group = @query.group_by_column.value(issue)) != previous_group %>
         <% reset_cycle %>
         <tr class="group open">
-          <td colspan="<%= query.inline_columns.size + 2 %>">
-            <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
-            <%= group.blank? ? l(:label_none) : column_content(@query.group_by_column, issue) %> <span class="count"><%= @issue_count_by_group[group] %></span>
-            <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}",
-                                 "toggleAllRowGroups(this)", :class => 'toggle-all') %>
+          <td colspan="<%= query.inline_columns.size + 1 %>">
+              <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
+              <%= group.blank? ? l(:label_none) : column_content(@query.group_by_column, issue) %> <span class="count"><%= @issue_count_by_group[group] %></span>
+              <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}",
+                                   "toggleAllRowGroups(this)", :class => 'toggle-all') %>
           </td>
         </tr>
         <% previous_group = group %>
       <% end %>
-      <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %>">
-          <%= raw @query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>"}.join %>
-
-          </tr>
-          <% if issue.testit_relations.size > 0 %>
-              <% issue.testit_relations.each do |relation| %>
-
-              <% other_issue = relation.other_issue(issue) -%>
-              <tr class="issue hascontextmenu" id="relation-<%= relation.id %>">
-                  <td/>
-                  <td colspan='6'>
-                      <table>
-              <td class="subject" style="width: 50%" >
-                  <%= relation.to_s(issue) {|other| link_to_issue(other, :project => Setting.cross_project_issue_relations?)}.html_safe %>
-              </td>
-              <td class="status"><%= other_issue.status.name %></td>
-              <td class="start_date"><%= format_date(other_issue.start_date) %></td>
-          </table>
-              </td>
-          </tr>
-
-      <%end%>
+      <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %>" >
+           <%= raw @query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>"}.join %>
+      </tr>
+      <% if testit_relations.size > 0 %>
+        <tr class="issue hascontextmenu" id="relation-<%= issue.id %>">
+          <td/>
+          <td colspan="<%= query.inline_columns.size + 1 %>">
+            <table>
+              <% testit_relations.each do |relation| %>
+                <tr>
+                  <% other_issue = relation.other_issue(issue) -%>
+                  <td class="subject" style="width: 60%" >
+                    <%= relation.to_s(issue) {|other| link_to_issue(other, :project => Setting.cross_project_issue_relations?)}.html_safe %>
+                  </td>
+                  <td class="status"><%= other_issue.status.name %></td>
+                  <td class="start_date"><%= format_date(other_issue.start_date) %></td>
+                </tr>
+              <%end%>
+            </table>
+          </td>
+        </tr>
       <%end%>
       <% @query.block_columns.each do |column|
-           if (text = column_content(column, issue)) && text.present? -%>
-      <tr class="<%= current_cycle %>">
-        <td colspan="<%= @query.inline_columns.size + 1 %>" class="<%= column.css_classes %>"><%= text %></td>
-      </tr>
+        if (text = column_content(column, issue)) && text.present? -%>
+          <tr class="<%= current_cycle %>">
+            <td colspan="<%= @query.inline_columns.size + 1 %>" class="<%= column.css_classes %>"><%= text %></td>
+          </tr>
+        <% end -%>
       <% end -%>
-      <% end -%>
-      <% end -%>
-      </tbody>
-  </table>
+    <% end -%>
+  </tbody>
+</table>
 
-  </div>
+</div>
 <% end -%>
 
 
