@@ -29,7 +29,7 @@ module TestitHelper
             :name => 'TestItRuns',
             :url => { :controller => :testit_runs, :action => :index},
             :partial => 'testit_runs/index',
-            :label => :title_testit_executions
+            :label => :title_testit_runs
         } # if can_view
         tabs << {
             :name => 'TestItReports',

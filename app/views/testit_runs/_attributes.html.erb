@@ -1,0 +1,26 @@
+<%= labelled_fields_for :issue, @issue do |f| %>
+
+<div class="splitcontent">
+<div class="splitcontentleft">
+<% if @issue.safe_attribute?('status_id') && @allowed_statuses.present? %>
+<p><%= f.select :status_id, (@allowed_statuses.collect {|p| [p.name, p.id]}), {:required => true},
+    :onchange => "updateIssueFrom('#{escape_javascript url_for(:controller => 'testit_runs', :action => 'run', :project => @project, :format => 'js')}', this)" %></p>
+<%= hidden_field_tag 'was_default_status', @issue.status_id, :id => nil if @issue.status == @issue.default_status %>
+<% else %>
+<p><label><%= l(:field_status) %></label> <%= @issue.status %></p>
+<% end %>
+
+</div>
+
+<div class="splitcontentright">
+
+</div>
+</div>
+
+<% if @issue.safe_attribute? 'custom_field_values' %>
+<%= render :partial => 'issues/form_custom_fields' %>
+<% end %>
+
+<% end %>
+
+<% include_calendar_headers_tags %>

@@ -3,7 +3,7 @@ class TestitRunsController < ApplicationController
 
   before_filter :find_project
   before_filter :find_setting
-  before_filter :find_issue, :only => [:show, :edit, :update]
+  before_filter :find_issue, :only => [:show, :edit, :update, :run ]
   before_filter :find_issues, :only => [:destroy]
   before_filter :authorize, :except => [:index, :new, :create]
 
@@ -80,12 +80,16 @@ class TestitRunsController < ApplicationController
       end
   end
 
+  def run 
+      edit
+  end
   # GET return an HTML form for editing an event
   # /photos/:id/edit
   def edit
       super
       respond_to do | format | 
           format.html { render :layout => !request.xhr? }
+          format.js
       end
   end
 

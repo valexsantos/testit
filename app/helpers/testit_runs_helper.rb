@@ -22,5 +22,13 @@ module TestitRunsHelper
 ##        end
 ##    end
 
+
+
+    def render_run_notes(issue, journal, options={})
+        content = ''
+        content << textilizable(journal, :notes)
+        css_classes = "wiki"
+        content_tag('div', content.html_safe, :id => "journal-#{journal.id}-notes", :class => css_classes)
+    end
 end
 

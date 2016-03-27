@@ -95,14 +95,43 @@ class TestitTestsController < ApplicationController
   # POST create a new event
   # /photos
   def create
-      if super
+
+      unless User.current.allowed_to?(:add_issues, @issue.project, :global => true)
+          raise ::Unauthorized
+      end
+      # create_new_issue_from param
+      # 
+      # @issue = new TestCase
+      
+      ActiveRecord::Base.transaction do
+
+          @issue.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
+          @issue.save!
+
+          # 
+          # create new TestRun issue
+          #
+          @test_run = Issue.new
+          @test_run.project = @project
+          @test_run.tracker = @setting.tracker(Testit::Setting::TestRunTrackerType)
+          @test_run.subject = @issue.subject
+          @test_run.description = "Execution task for #{@issue.tracker.name} ##{@issue.id}: #{@issue.subject}"
+          @test_run.author ||= User.current
+          @test_run.start_date ||= Date.today if Setting.default_issue_start_date_to_creation_date?
+          @test_run.save!
+
+          #
+          # add the relation
+          #
+          @relation_type = Testit::Relation::TYPE_TC_HAS_TR
+          @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
+          @testit_relation.issue_from = @issue
+          @testit_relation.issue_to = @test_run
+          @testit_relation.init_journals(User.current)
+          @testit_relation.save
           flash[:notice] = l(:notice_test_case_created)
           # redirect_to :controller=> :testit, :action => :index, :project_id => @project
           redirect_to  :controller => :testit_tests, :action => :show, :project_id => @project, :id => @issue
-      else
-          # TODO render errorr no redirect
-          flash[:error] = l(:failed_to_create) 
-          redirect_to :action => :new, :project_id => @project
       end
   end
   # PUT update a specific event

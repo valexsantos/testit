@@ -110,7 +110,7 @@ class TestitRelationsController < ApplicationController
                         :locals => {:title => l(:title_add_to_test_suite)} }
       end
   end
-  # add test_run relation to test_case
+  # add test_run relation to test_plan
   def new_tr
       retrieve_query_for(Testit::Setting::TestRunTrackerType)
       calc_relation_type(:new_tr) 
@@ -232,8 +232,6 @@ class TestitRelationsController < ApplicationController
               @relation_type = Testit::Relation::TYPE_TC_PART_OF_TS
           when :new_tr
               @relation_type = Testit::Relation::TYPE_TC_HAS_TR
-          when :new_tp
-              @relation_type = Testit::Relation::TYPE_TC_PART_OF_TP
           when :new_req
               @relation_type = Testit::Relation::TYPE_TC_PART_OF_REQ
           end
@@ -244,14 +242,11 @@ class TestitRelationsController < ApplicationController
           end
       when Testit::Setting::TestPlanTrackerType
           case op
-          when :new_tc
-              @relation_type = Testit::Relation::TYPE_TP_HAS_TC
+          when :new_tr
+              @relation_type = Testit::Relation::TYPE_TP_HAS_TR
           end
       when Testit::Setting::TestRunTrackerType
-          case op
-          when :new_tc
-              @relation_type = Testit::Relation::TYPE_TR_PART_OF_TC
-          end
+          raise "Invalid operation - cant add relations to TestRun traccker"
       end
   end
 

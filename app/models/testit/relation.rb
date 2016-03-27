@@ -5,8 +5,8 @@ module Testit
         TYPE_TC_PART_OF_REQ = "tc_part_of_req"
         TYPE_TC_HAS_TR      = "tc_has_tr"
         TYPE_TR_PART_OF_TC  = "tr_part_of_tc"
-        TYPE_TP_HAS_TC      = "tp_has_tc"
-        TYPE_TC_PART_OF_TP  = "tc_part_of_tp"
+        TYPE_TP_HAS_TR      = "tp_has_tr"
+        TYPE_TR_PART_OF_TP  = "tr_part_of_tp"
         TYPE_TS_HAS_TC      = "ts_has_tc"
         TYPE_TC_PART_OF_TS  = "tc_part_of_ts"
 
@@ -17,8 +17,8 @@ module Testit
             TYPE_TC_HAS_TR      => {:name => :lable_tc_has_tr, :sym_name => :lable_tr_part_of_tc, :order => 3, :sym => TYPE_TC_HAS_TR ,:reverse => TYPE_TR_PART_OF_TC },
             TYPE_TR_PART_OF_TC  => {:name => :lable_tr_part_of_tc, :sym_name => :lable_tc_has_tr, :order => 4, :sym => TYPE_TR_PART_OF_TC ,:reverse => TYPE_TC_HAS_TR },
 
-            TYPE_TP_HAS_TC      => {:name => :lable_tp_has_tc, :sym_name => :lable_tc_part_of_tp, :order => 5, :sym => TYPE_TP_HAS_TC ,:reverse => TYPE_TC_PART_OF_TP },
-            TYPE_TC_PART_OF_TP  => {:name => :lable_tc_part_of_tp, :sym_name => :lable_tp_has_tc, :order => 6, :sym => TYPE_TC_PART_OF_TP ,:reverse => TYPE_TP_HAS_TC },
+            TYPE_TP_HAS_TR      => {:name => :lable_tp_has_tr, :sym_name => :lable_tr_part_of_tp, :order => 5, :sym => TYPE_TP_HAS_TR ,:reverse => TYPE_TR_PART_OF_TP },
+            TYPE_TR_PART_OF_TP  => {:name => :lable_tr_part_of_tp, :sym_name => :lable_tp_has_tr, :order => 6, :sym => TYPE_TR_PART_OF_TP ,:reverse => TYPE_TP_HAS_TR },
             
             TYPE_TS_HAS_TC      => {:name => :lable_ts_has_tc, :sym_name => :lable_tc_part_of_ts, :order => 7, :sym => TYPE_TS_HAS_TC ,:reverse => TYPE_TC_PART_OF_TS },
             TYPE_TC_PART_OF_TS  => {:name => :lable_tc_part_of_ts, :sym_name => :lable_ts_has_tc, :order => 8, :sym => TYPE_TC_PART_OF_TS ,:reverse => TYPE_TS_HAS_TC },

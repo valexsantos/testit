@@ -1,0 +1,23 @@
+<% reply_links = authorize_for('issues', 'edit') -%>
+<div class="details">
+  <div class="spilcontents">
+ <% for journal in journals %>
+   <% if journal.details.any?  && (journal.details.where(:prop_key=> "status_id").size > 0 || !journal.notes.blank?)%>
+              <div id="change-<%= journal.id %>" class="<%= journal.css_classes %>">
+                  <div id="note-<%= journal.indice %>">
+                      <h4><a href="#note-<%= journal.indice %>" class="journal-link">#<%= journal.indice %></a></h4>
+                  </div>
+              </div>
+              <div class="spilcontentsleft">
+          <% journal.visible_details.each do | jd | %>
+              <% if jd.prop_key == 'status_id' %>
+                  <p><%= jd.prop_key == 'status_id' ? "#{IssueStatus.find(jd.value).name}" : "-"%></p>
+             <% end %>
+         <% end %>
+         <p><%= journal.notes.blank? ? "" : render_notes(@issue, journal, :reply_links => reply_links)  %></p>
+       </div>
+   <% end %>
+
+ <% end %>
+ </div>
+</div>

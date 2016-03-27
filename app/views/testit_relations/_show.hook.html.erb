@@ -9,6 +9,7 @@ return unless issue_tracker_type && issue_tracker_type != Testit::Setting::BugTr
 views = { :req_list => false, :test_case_list => false, :test_run_list => false,
           :test_suite_list => false, :test_plan_list => false}
 
+add_enabled = false
 case issue_tracker_type
 when Testit::Setting::RequirementTrackerType
     views[:test_case_list] = true
@@ -16,9 +17,12 @@ when Testit::Setting::TestCaseTrackerType
     views[:req_list] = true
     views[:test_run_list] = true
     views[:test_suite_list] = true
-    views[:test_plan_list] = true
-when Testit::Setting::TestSuiteTrackerType, Testit::Setting::TestPlanTrackerType
+    # TODO - posso ver aqui a lista onde este TC esta a ser executado views[:test_plan_list] = true
+when Testit::Setting::TestSuiteTrackerType
     views[:test_case_list] = true
+when Testit::Setting::TestPlanTrackerType
+    views[:test_run_list] = true
+    add_enabled = true
 when Testit::Setting::TestRunTrackerType 
     views[:test_case_list] = true
 end
@@ -41,27 +45,30 @@ end
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_req, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:label_requirement_plural),
+        :add_enabled => true,
         :tracker_type => issue_tracker_type
     }%>
 <%end%>
 
 <% if views[:test_case_list] %>
     <%= render :partial => 'testit_relations/show', :locals => {
-        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /tc_part_of_req|tc_part_of_tp|tc_part_of_ts|tr_part_of_tc|req_has_tc|tp_has_tc/ },
+        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /req_has_tc|tc_part_of_req|ts_has_tc|tc_part_of_ts|tc_has_tr|tr_part_of_tc/ },
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tc, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_tests),
+        :add_enabled => true,
         :tracker_type => issue_tracker_type
     }%>
 <%end%>
 
 <% if views[:test_run_list] %>
     <%= render :partial => 'testit_relations/show', :locals => {
-        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /tc_has_tr|tr_part_of_tc/}, 
+        :testit_relations => @testit_relations.select {|r| r.relation_type =~ /tc_has_tr|tr_part_of_tc|tp_has_tr|tr_part_of_tp/}, 
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tr, :project_id => @project.id)}','#{@issue.id}');",
-        :title => l(:title_testit_executions),
-        :tracker_type => issue_tracker_type
+        :title => l(:title_testit_runs),
+        :tracker_type => issue_tracker_type,
+        :add_enabled => add_enabled
     }%>
 <%end%>
 
@@ -71,6 +78,7 @@ end
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_ts, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_suites),
+        :add_enabled => true,
         :tracker_type => issue_tracker_type
     }%>
 <%end%>
@@ -81,6 +89,7 @@ end
         :issue => @issue, 
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tp, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_plans),
+        :add_enabled => true,
         :tracker_type => issue_tracker_type
     }%>
 <%end%>

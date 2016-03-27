@@ -9,8 +9,8 @@
   
 <div>
   <hr/>
-
-<% if add_relation_action && User.current.allowed_to?(:manage_issue_relations, @project) %>
+<% add_enabled ||=false %>
+<% if add_enabled && add_relation_action && User.current.allowed_to?(:manage_issue_relations, @project) %>
   <div class="contextual">
     <%= link_to_function l(:button_add), "#{add_relation_action}", :class => 'icon' %>
   </div>
@@ -20,7 +20,7 @@
 
 
 <% if @testit_relations.present? %>
-    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => testit_relations, :issue => @issue, :tracker_type => "xxx"}%>
+    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => testit_relations, :issue => @issue, :add_enabled => add_enabled}%>
 <% end %>
 
 </div>

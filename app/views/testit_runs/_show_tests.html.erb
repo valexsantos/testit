@@ -1,15 +1,10 @@
 
 <%
-  # view for testit_relation
-  #
-  # locals:
-  #  :add_relation_action =>  "addTestRelation(this,'#{@issue.id}','#{@testit_relation.relations_for(@issue)}');" 
-  #  :title => <%=l(:label_testit_relation)
 %>
 
 <h3><strong><%=title%></strong></h3>
 <hr/>
- <div class="list issues">
+<div class="all_attributes">
   <% testit_relations.each do |relation| %>
     <div class="<%= cycle('odd', 'even') %>">
       <% other_issue = relation.other_issue(@issue) %>
@@ -47,5 +42,6 @@
     </div>
   <% end %>
 </div>
+
 
 
