@@ -60,28 +60,28 @@ class SetupTestitTrackers < ActiveRecord::Migration
             :name => 'Test case',
             :default_status => new_status
         ).first_or_create
-        testcase_tracker = tracker_position
+        testcase_tracker.position = tracker_position
         tracker_position = tracker_position + 1
         #
         testsuite_tracker =  Tracker.where(
             :name => 'Test suite',
             :default_status => new_status
         ).first_or_create
-        testsuite_tracker = tracker_position
+        testsuite_tracker.position = tracker_position
         tracker_position = tracker_position + 1
         #
         testplan_tracker =  Tracker.where(
             :name => 'Test plan',
             :default_status => new_status
         ).first_or_create
-        testplan_tracker = tracker_position
+        testplan_tracker.position = tracker_position
         tracker_position = tracker_position + 1
         #
         testrun_tracker =  Tracker.where(
             :name => 'Test run',
             :default_status => na_status
         ).first_or_create
-        testrun_tracker = tracker_position
+        testrun_tracker.position = tracker_position
         # workflow
         Role.all.each { |role|
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => new_status, :new_status => in_progress_status)
