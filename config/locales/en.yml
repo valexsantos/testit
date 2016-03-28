@@ -110,8 +110,10 @@ en:
   error_can_not_manage_test_cases: "You aren't permitted to manage test cases."
   error_failed_to_update: "Failed to update."
   error_failed_to_create: "Failed to create."
+  error_configure_first: "Please configure TestIt tool first."
 
   notice_test_case_created: "Test case created."
   notice_test_suite_created: "Test suite created."
   notice_test_plan_created: "Test plan created."
+
 

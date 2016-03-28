@@ -10,17 +10,28 @@
 <div>
   <hr/>
 <% add_enabled ||=false %>
+<% create_enabled ||=false %>
 <% if add_enabled && add_relation_action && User.current.allowed_to?(:manage_issue_relations, @project) %>
   <div class="contextual">
     <%= link_to_function l(:button_add), "#{add_relation_action}", :class => 'icon' %>
   </div>
 <% end %>
 
+<%# TODO Fix%>
+<% if create_enabled %>
+  <div class="contextual">
+      <%= link_to_function l(:button_create), "createTestRunForTC('#{url_for(:controller => :testit_tests, :action => :new_tr, :project_id => @project.id, :issue=>@issue)}');", 
+          :class => 'icon' %>
+  </div>
+<% end %>
+
+
 <p><strong><%=title%></strong></p>
 
 
 <% if @testit_relations.present? %>
-    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => testit_relations, :issue => @issue, :add_enabled => add_enabled}%>
+    <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => testit_relations, :issue => @issue, 
+                                                                :add_enabled => add_enabled, :create_enabled=> create_enabled}%>
 <% end %>
 
 </div>

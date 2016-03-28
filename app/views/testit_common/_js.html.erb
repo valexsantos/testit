@@ -313,6 +313,49 @@ function add_test_plan(p) {
 };
 
 /*
+ * TestRun - TestCase
+ */
+function createTestRunForTC(the_url) {
+    $.ajax({
+        url: the_url,
+        type: 'put',
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+            $(document).trigger('view-issue', [data]);
+            $(document).trigger('update-issue-list');
+            $('#ajax-indicator').hide();
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+        });
+    return false;
+};
+function deleteTCTR(the_url,are_you_sure) {
+    if (!confirm(are_you_sure)) return false;
+    $.ajax({
+        url: the_url,
+        type: 'delete',
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data){
+            $(document).trigger('view-issue', [data]);
+            $(document).trigger('update-issue-list');
+            $('#ajax-indicator').hide();
+        },
+        error: function(xhr){
+            $('#ajax-indicator').hide();
+            alert('Error: ' + xhr.statusText);
+        }
+        });
+    return false;
+};
+
+/*
  * modal window
  */
 function showTestitModal(id, data, width) {

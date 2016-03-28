@@ -10,6 +10,7 @@ views = { :req_list => false, :test_case_list => false, :test_run_list => false,
           :test_suite_list => false, :test_plan_list => false}
 
 add_enabled = false
+create_enabled = false
 case issue_tracker_type
 when Testit::Setting::RequirementTrackerType
     views[:test_case_list] = true
@@ -17,6 +18,7 @@ when Testit::Setting::TestCaseTrackerType
     views[:req_list] = true
     views[:test_run_list] = true
     views[:test_suite_list] = true
+    create_enabled = true
     # TODO - posso ver aqui a lista onde este TC esta a ser executado views[:test_plan_list] = true
 when Testit::Setting::TestSuiteTrackerType
     views[:test_case_list] = true
@@ -68,6 +70,7 @@ end
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tr, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_runs),
         :tracker_type => issue_tracker_type,
+        :create_enabled => create_enabled,
         :add_enabled => add_enabled
     }%>
 <%end%>

@@ -43,7 +43,7 @@ class TestitRunsController < ApplicationController
               format.html{ render :partial=> "testit_runs/issue_list", :layout => !request.xhr?, 
                            :locals => {:query => @query, :issues => @issues,
                                        :title => l(:label_test_run_plural),
-                                       :available_formats => ['Atom', 'CSV', 'PDF'],
+                                       :available_formats => ['CSV', 'PDF'],
                                        :query_form_id => 'query-form',
                                        :query_submit_url => partial_query_common_options,
                                        :query_list_dest_id => 'issue-list',
@@ -97,10 +97,10 @@ class TestitRunsController < ApplicationController
   # /photos
   def create
       super
-      flash[:notice] = l(:notice_test_run_created)
+     # TODO flash[:notice] = l(:notice_test_run_created)
       redirect_to  :action => :show, :project_id => @project, :id => @issue
   rescue 
-      flash[:error] = $!.message
+     # TODO flash[:error] = $!.message
       redirect_to :action => :new, :project_id => @project
   end
   # PUT update a specific event
@@ -108,8 +108,8 @@ class TestitRunsController < ApplicationController
   def update
       if super
           render_attachment_warning_if_needed(@issue)
-          flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
-          # TODO open BUg if necessary
+          # TODO flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
+          # TODO open Bug issue if necessary
           redirect_to  :action => :show, :project_id => @project, :id => @issue
       else
           redirect_to :action => :edit, :project_id => @project

@@ -1,23 +1,43 @@
 <% reply_links = authorize_for('issues', 'edit') -%>
+<style>
+.status-current {
+    font-weight: bold;
+}
+.status-passed {
+    background-color: #aaff88;
+}
+.status-not_available{
+    background-color: #eeeeee;
+}
+.status-failed {
+    background-color: #ffcccc;
+}
+.status-blocked {
+    background-color: #ccccff;
+}
+</style>
 <div class="details">
-  <div class="spilcontents">
- <% for journal in journals %>
-   <% if journal.details.any?  && (journal.details.where(:prop_key=> "status_id").size > 0 || !journal.notes.blank?)%>
-              <div id="change-<%= journal.id %>" class="<%= journal.css_classes %>">
-                  <div id="note-<%= journal.indice %>">
-                      <h4><a href="#note-<%= journal.indice %>" class="journal-link">#<%= journal.indice %></a></h4>
-                  </div>
-              </div>
-              <div class="spilcontentsleft">
-          <% journal.visible_details.each do | jd | %>
-              <% if jd.prop_key == 'status_id' %>
-                  <p><%= jd.prop_key == 'status_id' ? "#{IssueStatus.find(jd.value).name}" : "-"%></p>
-             <% end %>
-         <% end %>
-         <p><%= journal.notes.blank? ? "" : render_notes(@issue, journal, :reply_links => reply_links)  %></p>
-       </div>
-   <% end %>
+    <% first_status = true %>
+    <% for journal in journals.reverse %>
+        <% if journal.details.where(:prop_key=> "status_id").size > 0 || !journal.notes.blank? %>
+            <div id="change-<%= journal.id %>" >
+                <div id="note-<%= journal.indice %>">
+                    <strong><a href="#note-<%= journal.indice %>" class="journal-link">#<%= journal.indice %></a></strong>
+                </div>
 
- <% end %>
- </div>
+                <% journal.visible_details.each do | jd | %>
+                    <% if jd.prop_key == 'status_id' 
+                           st = IssueStatus.find(jd.value).name
+                           clazz = "status-#{st.strip.split.join('_').downcase}"
+                           clazz << " status-current" if first_status
+                    %>
+                    <p class='<%=clazz%>'><%=st%></p>
+                    <% first_status = false if first_status %>
+                    <% end %>
+                <% end %>
+                <p><%= journal.notes.blank? ? "" : render_notes(@issue, journal, :reply_links => reply_links)  %></p>
+            </div>
+        <% end %>
+    <% end %>
 </div>
+

@@ -88,11 +88,11 @@ class TestitIssuesController < ApplicationController
   # /photos
   def create
       if super
-          flash[:notice] = l(:notice_test_case_created)
+          # TODO flash[:notice] = l(:notice_test_case_created)
           # redirect_to :controller=> :testit, :action => :index, :project_id => @project
           redirect_to  :controller => :testit_tests, :action => :show, :project_id => @project, :id => @issue
       else
-          flash[:error] = l(:failed_to_create) 
+          # TODO flash[:error] = l(:failed_to_create) 
           redirect_to :action => :new, :project_id => @project
       end
   end
@@ -101,7 +101,7 @@ class TestitIssuesController < ApplicationController
   def update
       if super
           render_attachment_warning_if_needed(@issue)
-          flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
+          # TODO flash[:notice] = l(:notice_successful_update) unless @issue.current_journal.new_record?
           redirect_to  :controller => :testit_tests, :action => :show, :project_id => @project, :id => @issue
       else
           redirect_to :action => :edit, :project_id => @project

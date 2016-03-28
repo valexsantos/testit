@@ -24,6 +24,6 @@
        <span class="pagination"><%=raw x%></span>
     <% end %>
 
-    <%= render :partial => 'testit_issues/other_formats', :locals => {:query => @query, :available_formats => ['Atom', 'CSV', 'PDF']} %>
+    <%= render :partial => 'testit_issues/other_formats', :locals => {:query => @query, :available_formats => ['CSV', 'PDF']} %>
 
 <% end %>

@@ -6,13 +6,17 @@ module TestitHelper
         can_edit = User.current.allowed_to?(:edit_test_cases, project)
         can_execute = User.current.allowed_to?(:execute_test_cases, project)
         can_view = User.current.allowed_to?(:view_test_cases, project)
+        # TODO 
+        dev=false
         tabs = []
-        tabs << {
-            :name => 'TestItIssues',
-            :partial => 'testit_issues/index',
-            :url => { :controller => :testit_issues, :action => :index},
-            :label => :title_testit_issues
-        } 
+        if dev
+            tabs << {
+                :name => 'TestItIssues',
+                :partial => 'testit_issues/index',
+                :url => { :controller => :testit_issues, :action => :index},
+                :label => :title_testit_issues
+            }
+        end
         tabs << {
             :name => 'TestItTests',
             :partial => 'testit_tests/index',

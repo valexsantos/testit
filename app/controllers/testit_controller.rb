@@ -7,7 +7,7 @@ class TestitController < ApplicationController
   def index
     @setting = Testit::Setting.find_by(:project_id => @project)
     if !@setting
-        flash[:notice] = "please configure TestIt tool first"
+        flash[:notice] = l(:error_configure_first)
         redirect_to settings_project_path(@project, :tab => 'testit')
     end
   end
