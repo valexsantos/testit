@@ -57,7 +57,7 @@ class SetupTestitTrackers < ActiveRecord::Migration
         tracker_position = Tracker.all.size + 1
         #
         testcase_tracker =  Tracker.where(
-            :name => 'Test casinho',
+            :name => 'Test case',
             :default_status => new_status
         ).first_or_create
         testcase_tracker = tracker_position
@@ -78,7 +78,7 @@ class SetupTestitTrackers < ActiveRecord::Migration
         tracker_position = tracker_position + 1
         #
         testrun_tracker =  Tracker.where(
-            :name => 'Test execution',
+            :name => 'Test run',
             :default_status => na_status
         ).first_or_create
         testrun_tracker = tracker_position
