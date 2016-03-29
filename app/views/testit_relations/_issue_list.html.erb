@@ -1,0 +1,13 @@
+
+    <div id="issue-for-relations-list">
+        <%# TODO TODO o problema da paginacao e do id da form %>
+        <%= render :partial => 'testit_common/issue_list', :locals => {:issues => @issues, :query => @query,
+         :title => '',
+          :available_formats => [],
+          :query_form_id => 'rel-query-form',
+          :query_submit_url => query_submit_url, 
+          :query_list_dest_id => 'rel-issue-list',
+          :table_form_id => 'rel-table-issue-list',
+          :table_show_select_all => true
+        } %>
+    </div>

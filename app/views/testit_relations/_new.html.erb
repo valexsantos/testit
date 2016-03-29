@@ -12,18 +12,8 @@
 
     <%= hidden_field_tag 'issue', @issue.id %>
 
-    <div id="issue-for-relations-list">
-        <%# TODO TODO o problema da paginacao e do id da form %>
-        <%= render :partial => 'testit_common/issue_list', :locals => {:issues => @issues, :query => @query,
-         :title => '',
-          :available_formats => [],
-          :query_form_id => 'rel-query-form',
-          :query_submit_url => { :controller => :testit_relations,  :action => :index },
-          :query_list_dest_id => 'rel-issue-list',
-          :table_form_id => 'rel-table-issue-list',
-          :table_show_select_all => true
-        } %>
-    </div>
+    <%= render :partial => 'testit_relations/issue_list', :locals => {:issues => @issues, :query => @query,
+                                                                      :query_submit_url => query_submit_url}%>
 
     <%= submit_tag l(:button_create), :name => nil, :onclick => "createRelation('rel-table-issue-list','#{@issue.id}', '#{@relation_type}','#{@op}');",  :type => 'button'  %>
     <%= submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button' %>

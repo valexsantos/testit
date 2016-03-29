@@ -107,8 +107,9 @@ class TestitRelationsController < ApplicationController
       calc_relation_type(:new_ts) 
       @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
       respond_to do | format |
-          format.html { render :layout => !request.xhr?, :partial => 'testit_relations/new', 
-                        :locals => {:title => l(:title_add_to_test_suite)} }
+          format.html { render :layout => !request.xhr?, :partial => get_partial,
+                        :locals => {:title => l(:title_add_to_test_suite), 
+                            :query_submit_url => { :controller => :testit_relations,  :action => :new_ts }} }
       end
   end
   # add test_run relation to test_plan
@@ -118,8 +119,9 @@ class TestitRelationsController < ApplicationController
       @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
 
       respond_to do | format |
-          format.html { render :layout => !request.xhr?, :partial => 'testit_relations/new', 
-                        :locals => {:title => l(:title_add_test_run)} }
+          format.html { render :layout => !request.xhr?, :partial => get_partial, 
+                        :locals => {:title => l(:title_add_test_run),
+                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tr}} }
       end
   end
   # add test_csse relation to test_plan / test_suite
@@ -128,8 +130,9 @@ class TestitRelationsController < ApplicationController
       calc_relation_type(:new_tc) 
       @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
       respond_to do | format |
-          format.html { render :layout => !request.xhr?, :partial => 'testit_relations/new', 
-                        :locals => {:title => l(:title_add_test_case)} }
+          format.html { render :layout => !request.xhr?, :partial => get_partial,
+                        :locals => {:title => l(:title_add_test_case),
+                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tc}} }
       end
   end
   # add test_plan relation to test_case
@@ -138,8 +141,9 @@ class TestitRelationsController < ApplicationController
       calc_relation_type(:new_tp) 
       @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
       respond_to do | format |
-          format.html { render :layout => !request.xhr?, :partial => 'testit_relations/new', 
-                        :locals => {:title => l(:title_add_to_test_plan)} }
+          format.html { render :layout => !request.xhr?, :partial => get_partial,
+                        :locals => {:title => l(:title_add_to_test_plan),
+                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tp}} }
       end
   end
   # add reuirement relation to test_case
@@ -149,8 +153,9 @@ class TestitRelationsController < ApplicationController
       @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
 
       respond_to do | format |
-          format.html { render :layout => !request.xhr?, :partial => 'testit_relations/new', 
-                        :locals => {:title => l(:title_add_requirement)} }
+          format.html { render :layout => !request.xhr?, :partial => get_partial,
+                        :locals => {:title => l(:title_add_requirement),
+                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_req}} }
       end
   end
   def retrieve_query_for(*testit_tracker_types)
@@ -249,6 +254,13 @@ class TestitRelationsController < ApplicationController
       when Testit::Setting::TestRunTrackerType
           raise "Invalid operation - cant add relations to TestRun traccker"
       end
+  end
+  def get_partial
+    if params[:table]
+      'testit_relations/issue_list'
+    else
+      'testit_relations/new'
+    end
   end
 
 

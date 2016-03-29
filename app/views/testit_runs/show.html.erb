@@ -13,7 +13,7 @@
 </div>
 
   <div class="subject">
-      <% testit_relations = @issue.testit_relations.select {|r| r.relation_type =~ /tc_has_tr|tr_part_of_tc/} %>
+      <% testit_relations = @issue.testit_relations.select {|r| r.relation_type =~  /tc_has_tr|tr_part_of_tc|tp_has_tr|tr_part_of_tp/} %>
       <% testit_relations.each do  |relation | %> 
           <p><%= relation.to_s(@issue) {|other| link_to_issue(other, :project => Setting.cross_project_issue_relations?)}.html_safe %></p>
       <% end %>
