@@ -1,9 +1,10 @@
 class TestitRelationsController < ApplicationController
   unloadable
 
-  before_filter :find_project, :authorize
+  before_filter :find_project
   before_filter :find_issue
   before_filter :find_setting
+  before_filter :authorize, :except => [:index, :new, :create]
 
 
   # before_filter :find_issue, :authorize, :only => [:index, :create]

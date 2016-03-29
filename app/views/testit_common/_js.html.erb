@@ -24,6 +24,246 @@ function merge_options(obj1,obj2){
     return obj3;
 }
 
+/*
+ * Query
+ */
+
+function FilterData() {
+    this.operatorLabels   =''; 
+    this.operatorByType   =''; 
+    this.availableFilters =''; 
+    this.labelDayPlural   =''; 
+    this.allProjects      =''; 
+}
+
+function initTestitFilters(root_id,filterData) {
+  var root = $('#'+root_id);
+  $('#add_filter_select',root).change(function() {
+    addTestitFilter(root, filterData, $(this).val(), '', []);
+  });
+  $('#filters-table td.field input[type=checkbox]',root).each(function() {
+    toggleFilterTestit($(this).val(),root);
+  });
+  $('#filters-table',root).on('click', 'td.field input[type=checkbox]', function() {
+    toggleFilterTestit($(this).val(),root);
+  });
+  $('#filters-table',root).on('click', '.toggle-multiselect', function() {
+    toggleMultiSelect($(this).siblings('select'));
+  });
+  $('#filters-table',root).on('keypress', 'input[type=text]', function(e) {
+    if (e.keyCode == 13) $(this).closest('form').submit();
+  });
+}
+
+function addTestitFilter(root, filterData, field, operator, values) {
+  var fieldId = field.replace('.', '_');
+  var tr = $('#tr_'+fieldId,root);
+  if (tr.length > 0) {
+    tr.show();
+  } else {
+    buildTestitFilterRow(root, filterData, field, operator, values);
+  }
+  $('#cb_'+fieldId,root).prop('checked', true);
+  toggleFilterTestit(field,root);
+  $('#add_filter_select', root).val('').find('option').each(function() {
+    if ($(this).attr('value') == field) {
+      $(this).attr('disabled', true);
+    }
+  });
+}
+
+function buildTestitFilterRow(root, filterData, field, operator, values) {
+  var fieldId = field.replace('.', '_');
+  var filterTable = $('#filters-table',root);
+  var filterOptions = filterData.availableFilters[field];
+  if (!filterOptions) return;
+  var operators = filterData.operatorByType[filterOptions['type']];
+  var filterValues = filterOptions['values'];
+  var i, select;
+
+  var tr = $('<tr class="filter">',root).attr('id', 'tr_'+fieldId).html(
+    '<td class="field"><input checked="checked" id="cb_'+fieldId+'" name="f[]" value="'+field+'" type="checkbox"><label for="cb_'+fieldId+'"> '+filterOptions['name']+'</label></td>' +
+    '<td class="operator"><select id="operators_'+fieldId+'" name="op['+field+']"></td>' +
+    '<td class="values"></td>'
+  );
+  filterTable.append(tr);
+
+  select = tr.find('td.operator select');
+  for (i = 0; i < operators.length; i++) {
+    var option = $('<option>').val(operators[i]).text(filterData.operatorLabels[operators[i]]);
+    if (operators[i] == operator) { option.attr('selected', true); }
+    select.append(option);
+  }
+  select.change(function(){ toggleOperatorTestit(field,root); });
+
+  switch (filterOptions['type']) {
+  case "list":
+  case "list_optional":
+  case "list_status":
+  case "list_subprojects":
+    tr.find('td.values').append(
+      '<span style="display:none;"><select class="value" id="values_'+fieldId+'_1" name="v['+field+'][]"></select>' +
+      ' <span class="toggle-multiselect">&nbsp;</span></span>'
+    );
+    select = tr.find('td.values select');
+    if (values.length > 1) { select.attr('multiple', true); }
+    for (i = 0; i < filterValues.length; i++) {
+      var filterValue = filterValues[i];
+      var option = $('<option>');
+      if ($.isArray(filterValue)) {
+        option.val(filterValue[1]).text(filterValue[0]);
+        if ($.inArray(filterValue[1], values) > -1) {option.attr('selected', true);}
+      } else {
+        option.val(filterValue).text(filterValue);
+        if ($.inArray(filterValue, values) > -1) {option.attr('selected', true);}
+      }
+      select.append(option);
+    }
+    break;
+  case "date":
+  case "date_past":
+    tr.find('td.values').append(
+      '<span style="display:none;"><input type="text" name="v['+field+'][]" id="values_'+fieldId+'_1" size="10" class="value date_value" /></span>' +
+      ' <span style="display:none;"><input type="text" name="v['+field+'][]" id="values_'+fieldId+'_2" size="10" class="value date_value" /></span>' +
+      ' <span style="display:none;"><input type="text" name="v['+field+'][]" id="values_'+fieldId+'" size="3" class="value" /> '+filterData.labelDayPlural+'</span>'
+    );
+    $('#values_'+fieldId+'_1',root).val(values[0]).datepicker(datepickerOptions);
+    $('#values_'+fieldId+'_2',root).val(values[1]).datepicker(datepickerOptions);
+    $('#values_'+fieldId,root).val(values[0]);
+    break;
+  case "string":
+  case "text":
+    tr.find('td.values').append(
+      '<span style="display:none;"><input type="text" name="v['+field+'][]" id="values_'+fieldId+'" size="30" class="value" /></span>'
+    );
+    $('#values_'+fieldId,root).val(values[0]);
+    break;
+  case "relation":
+    tr.find('td.values').append(
+      '<span style="display:none;"><input type="text" name="v['+field+'][]" id="values_'+fieldId+'" size="6" class="value" /></span>' +
+      '<span style="display:none;"><select class="value" name="v['+field+'][]" id="values_'+fieldId+'_1"></select></span>'
+    );
+    $('#values_'+fieldId,root).val(values[0]);
+    select = tr.find('td.values select');
+    for (i = 0; i < filterData.allProjects.length; i++) {
+      var filterValue = filterData.allProjects[i];
+      var option = $('<option>',root);
+      option.val(filterValue[1]).text(filterValue[0]);
+      if (values[0] == filterValue[1]) { option.attr('selected', true); }
+      select.append(option);
+    }
+    break;
+  case "integer":
+  case "float":
+  case "tree":
+    tr.find('td.values').append(
+      '<span style="display:none;"><input type="text" name="v['+field+'][]" id="values_'+fieldId+'_1" size="6" class="value" /></span>' +
+      ' <span style="display:none;"><input type="text" name="v['+field+'][]" id="values_'+fieldId+'_2" size="6" class="value" /></span>'
+    );
+    $('#values_'+fieldId+'_1',root).val(values[0]);
+    $('#values_'+fieldId+'_2',root).val(values[1]);
+    break;
+  }
+}
+
+
+/*
+ *  TODO pq nao passar o elemento?
+ * assim nao precisava de adicionar mais parametros...
+ */
+function toggleFilterTestit(field, root) {
+  var fieldId = field.replace('.', '_');
+  if ($('#cb_' + fieldId,root).is(':checked')) {
+    $("#operators_" + fieldId,root).show().removeAttr('disabled');
+    toggleOperatorTestit(field,root);
+  } else {
+    $("#operators_" + fieldId,root).hide().attr('disabled', true);
+    enableValuesTestit(field, [],root);
+  }
+}
+
+function enableValuesTestit(field, indexes,root) {
+  var fieldId = field.replace('.', '_');
+  $('#tr_'+fieldId+' td.values .value',root).each(function(index) {
+    if ($.inArray(index, indexes) >= 0) {
+      $(this).removeAttr('disabled');
+      $(this).parents('span').first().show();
+    } else {
+      $(this).val('');
+      $(this).attr('disabled', true);
+      $(this).parents('span').first().hide();
+    }
+
+    if ($(this).hasClass('group')) {
+      $(this).addClass('open');
+    } else {
+      $(this).show();
+    }
+  });
+}
+
+function toggleOperatorTestit(field,root) {
+  var fieldId = field.replace('.', '_');
+  var operator = $("#operators_" + fieldId,root);
+  switch (operator.val()) {
+    case "!*":
+    case "*":
+    case "t":
+    case "ld":
+    case "w":
+    case "lw":
+    case "l2w":
+    case "m":
+    case "lm":
+    case "y":
+    case "o":
+    case "c":
+    case "*o":
+    case "!o":
+      enableValuesTestit(field, [],root);
+      break;
+    case "><":
+      enableValuesTestit(field, [0,1],root);
+      break;
+    case "<t+":
+    case ">t+":
+    case "><t+":
+    case "t+":
+    case ">t-":
+    case "<t-":
+    case "><t-":
+    case "t-":
+      enableValuesTestit(field, [2],root);
+      break;
+    case "=p":
+    case "=!p":
+    case "!p":
+      enableValuesTestit(field, [1],root);
+      break;
+    default:
+      enableValuesTestit(field, [0],root);
+      break;
+  }
+}
+
+function toggleMultiSelect(el) {
+  if (el.attr('multiple')) {
+    el.removeAttr('multiple');
+    el.attr('size', 1);
+  } else {
+    el.attr('multiple', true);
+    if (el.children().length > 10)
+      el.attr('size', 10);
+    else
+      el.attr('size', 4);
+  }
+}
+
+
+
+
+
+
 function ajx(url, dest_id)  {
     $.ajax({
         url: url,
@@ -74,7 +314,7 @@ function sortColumn(element, url_options) {
 };
 
 
-function loadIssueListbyUrl(the_url) {
+function loadIssueListbyUrl(the_url, dest_id) {
     $.ajax({
         url: the_url,
         type: 'get',
@@ -83,7 +323,11 @@ function loadIssueListbyUrl(the_url) {
            $('#ajax-indicator').show();
         },
         success: function(data){
-           $(document).trigger('update-issue-list', [data]);
+        if (dest_id) {
+              $('#'+dest_id).html(data);
+           } else {
+              $(document).trigger('update-issue-list', [data]);
+           }
            $('#ajax-indicator').hide();
         },
         error: function(xhr){
@@ -387,7 +631,7 @@ function hideTestitModal(el) {
  * Event driven
  */
 $(document).bind('reload-issue', function(e, data) {
-          ajx($('#testit-view').attr('reload'),'testit-view');
+    ajx($('#testit-view').attr('reload'),'testit-view');
 });
 $(document).bind('view-issue', function(e, data) {
    $('#testit-view').html(data);

@@ -15,7 +15,7 @@
            <fieldset id="filters" class="collapsible <%= @query.new_record? ? "" : "collapsed" %>">
                <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
                <div style="<%= @query.new_record? ? "" : "display: none;" %>">
-                   <%= render :partial => 'queries/filters', :locals => {:query => @query} %>
+                   <%= render :partial => 'testit_common/queries/filters', :locals => {:query => @query, :fid => "#{query_form_id}-filter"} %>
                </div>
            </fieldset>
            <fieldset class="collapsible collapsed">

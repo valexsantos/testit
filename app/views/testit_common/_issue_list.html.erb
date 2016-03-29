@@ -41,7 +41,7 @@
        <% 
            # view partial_query_common_options
            x=pagination_links_full @issue_pages, @issue_count
-           x.gsub!( /href=\"(.*?)\"/,'href="#" onclick="loadIssueListbyUrl(\'\1\');"')
+       x.gsub!( /href=\"(.*?)\"/,'href="#" onclick="loadIssueListbyUrl(\'\1\',\''"#{query_list_dest_id}"'\');"')
        %>
        <span class="pagination"><%=raw x%></span>
     <% end %>

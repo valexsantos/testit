@@ -16,7 +16,7 @@ Redmine::Plugin.register :testit do
     name 'TestIt'
     author 'Vasco Santos'
     description 'Test management tool'
-    version '0.2.2'
+    version '0.2.4'
     url 'https://github.com/valexsantos/testit'
     author_url 'https://github.com/valexsantos'
 

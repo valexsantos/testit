@@ -1,0 +1,28 @@
+<%= javascript_tag do %>
+    var filterData = new FilterData();
+    filterData.operatorLabels = <%= raw_json Query.operators_labels %>;
+    filterData.operatorByType = <%= raw_json Query.operators_by_filter_type %>;
+    filterData.availableFilters = <%= raw_json query.available_filters_as_json %>;
+    filterData.labelDayPlural = <%= raw_json l(:label_day_plural) %>;
+    filterData.allProjects = <%= raw_json query.all_projects_values %>;
+
+$(document).ready(function(){
+  initTestitFilters('<%="#{fid}"%>',filterData);
+  <% query.filters.each do |field, options| %>
+      addTestitFilter($('<%="##{fid}"%>'),filterData,"<%= field %>", <%= raw_json query.operator_for(field) %>, <%= raw_json query.values_for(field) %>);
+  <% end %>
+});
+<% end %>
+
+<div id='<%="#{fid}"%>'>
+  <table id='filters-table'>
+  </table>
+
+  <div class="add-filter">
+      <%= label_tag("add_filter_select", l(:label_filter_add)) %>
+      <%= select_tag "add_filter_select", filters_options_for_select(query), :name => nil %>
+  </div>
+</div>
+
+<%= hidden_field_tag 'f[]', '' %>
+<% include_calendar_headers_tags %>
