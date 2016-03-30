@@ -7,7 +7,7 @@ module TestitHelper
         can_execute = User.current.allowed_to?(:execute_test_cases, project)
         can_view = User.current.allowed_to?(:view_test_cases, project)
         # TODO 
-        dev=false
+        dev=true
         tabs = []
         if dev
             tabs << {

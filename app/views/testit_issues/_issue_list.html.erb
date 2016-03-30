@@ -19,7 +19,7 @@
        <%# TODO XXX fix pagination. definido num modulo dentro de lib/redmine/pagination.rb ... %>
        <% 
            x=pagination_links_full @issue_pages, @issue_count
-           x.gsub!( /href=\"(.*?)\"/,'href="#" onclick="loadIssueListbyUrl(\'\1\');"')
+           x.gsub!( /href=\"(.*?)\"/,'href="#" onclick="loadIssueListbyUrl(\'\1\',\'issue-list\');"')
        %>
        <span class="pagination"><%=raw x%></span>
     <% end %>

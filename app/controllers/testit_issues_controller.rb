@@ -42,7 +42,8 @@ class TestitIssuesController < ApplicationController
       respond_to do | format | 
           if params[:table]
               # TODO FIX isto e' o reload da tabela 
-              format.html { render :partial=> "testit_issues/issue_list", :layout => !request.xhr?, :locals => {:query => @query, :issues => @issues} }
+              format.html { render :partial=> "testit_issues/issue_list", :layout => !request.xhr?, :locals => {:query => @query, :issues => @issues, 
+                                                                                                                :title => l(:title_testit_issues)} }
           else
               format.html { render :layout => !request.xhr? }
           end
