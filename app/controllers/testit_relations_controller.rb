@@ -6,11 +6,8 @@ class TestitRelationsController < ApplicationController
   before_filter :find_setting
   before_filter :authorize, :except => [:index, :new, :create]
 
-
   # before_filter :find_issue, :authorize, :only => [:index, :create]
   before_filter :find_relation, :only => [:show, :destroy]
-
-
 
   helper :testit
   helper :testit_sort
@@ -70,11 +67,7 @@ class TestitRelationsController < ApplicationController
               @testit_relations = @issue.reload.testit_relations.select {|r| r.other_issue(@issue) && r.other_issue(@issue).visible? }
           }
           format.api {
-              if saved
-                  render :action => 'show', :status => :created, :location => relation_url(@relation)
-              else
-                  render_validation_errors(@relation)
-              end
+              render :action => 'show', :status => :created, :location => relation_url(@relation)
           }
       end
   end
@@ -105,61 +98,61 @@ class TestitRelationsController < ApplicationController
   def new_ts
       retrieve_query_for(Testit::Setting::TestSuiteTrackerType)
       calc_relation_type(:new_ts) 
-      @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
+      
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial,
-                        :locals => {:title => l(:title_add_to_test_suite), 
-                            :query_submit_url => { :controller => :testit_relations,  :action => :new_ts,:issue_id => @issue }} }
+                        :locals => {:title => l(:title_add_to_test_suite),
+                                    :query_submit_url => @query_submit_url}}
       end
   end
   # add test_run relation to test_plan
   def new_tr
       retrieve_query_for(Testit::Setting::TestRunTrackerType)
       calc_relation_type(:new_tr) 
-      @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
 
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial, 
                         :locals => {:title => l(:title_add_test_run),
-                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tr, :issue_id => @issue}} }
+                                    :query_submit_url => @query_submit_url}}
       end
   end
   # add test_csse relation to test_plan / test_suite
   def new_tc
       retrieve_query_for(Testit::Setting::TestCaseTrackerType)
       calc_relation_type(:new_tc) 
-      @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
-      @testit_relations = @issue.testit_relations.select{ |r| r.relation_type =~ /ts_has_tc|tc_part_of_ts/ }.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id: x.issue_from_id}
-      
+
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial,
                         :locals => {:title => l(:title_add_test_case),
-                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tc, :issue_id => @issue}} }
+                                    :query_submit_url => @query_submit_url}}
       end
   end
   # add test_plan relation to test_case
   def new_tp
       retrieve_query_for(Testit::Setting::TestPlanTrackerType)
       calc_relation_type(:new_tp) 
-      @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
+
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial,
                         :locals => {:title => l(:title_add_to_test_plan),
-                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tp, :issue_id => @issue}} }
+                                    :query_submit_url => @query_submit_url}}
       end
   end
   # add reuirement relation to test_case
   def new_req
       retrieve_query_for(Testit::Setting::RequirementTrackerType)
       calc_relation_type(:new_req) 
-      @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
 
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial,
                         :locals => {:title => l(:title_add_requirement),
-                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_req, :issue_id => @issue}} }
+                                    :query_submit_url => @query_submit_url}}
       end
   end
+
+  #
+  # aux
+  #
   def retrieve_query_for(*testit_tracker_types)
       @query = Testit::TestitQuery.new(:name => "_")
       @query.project = @project
@@ -228,34 +221,51 @@ class TestitRelationsController < ApplicationController
   def calc_relation_type(op)
       @op =op
       issue_tracker_type = @setting.tracker_type_of(@issue)
+
       case issue_tracker_type
       when Testit::Setting::RequirementTrackerType
           case op
           when :new_tc
               @relation_type = Testit::Relation::TYPE_REQ_HAS_TC
+              @testit_relations = @issue.testit_relations.select{ |r| r.relation_type =~ /req_has_tc|tc_part_of_req/ }.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id: x.issue_from_id}
+          else
+              raise "Invalid operation - #{op} / #{issue_tracker_type}"
           end
       when Testit::Setting::TestCaseTrackerType
           case op
           when :new_ts
               @relation_type = Testit::Relation::TYPE_TC_PART_OF_TS
+              @testit_relations = @issue.testit_relations.select{ |r| r.relation_type =~ /ts_has_tc|tc_part_of_ts/ }.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id: x.issue_from_id}
           when :new_tr
               @relation_type = Testit::Relation::TYPE_TC_HAS_TR
+              @testit_relations = @issue.testit_relations.select{ |r| r.relation_type =~ /tc_has_tr|tr_part_of_tc/ }.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id: x.issue_from_id}
           when :new_req
               @relation_type = Testit::Relation::TYPE_TC_PART_OF_REQ
+              @testit_relations = @issue.testit_relations.select{ |r| r.relation_type =~ /req_has_tc|tc_part_of_req/ }.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id: x.issue_from_id}
+          else
+              raise "Invalid operation - #{op} / #{issue_tracker_type}"
           end
       when Testit::Setting::TestSuiteTrackerType
           case op
           when :new_tc
               @relation_type = Testit::Relation::TYPE_TS_HAS_TC
+              @testit_relations = @issue.testit_relations.select{ |r| r.relation_type =~ /ts_has_tc|tc_part_of_ts/ }.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id: x.issue_from_id}
+          else
+              raise "Invalid operation - #{op} / #{issue_tracker_type}"
           end
       when Testit::Setting::TestPlanTrackerType
           case op
           when :new_tr
               @relation_type = Testit::Relation::TYPE_TP_HAS_TR
+              @testit_relations = @issue.testit_relations.select{ |r| r.relation_type =~ /tp_has_tr|tr_part_of_tp/ }.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id: x.issue_from_id}
+          else
+              raise "Invalid operation - #{op} / #{issue_tracker_type}"
           end
       when Testit::Setting::TestRunTrackerType
-          raise "Invalid operation - cant add relations to TestRun traccker"
+          raise "Invalid operation - cant add relations to TestRun tracker"
       end
+      @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
+      @query_submit_url = { :controller => :testit_relations,  :action => op,:issue_id => @issue }
   end
   def get_partial
     if params[:table]
