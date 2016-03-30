@@ -48,6 +48,7 @@ end
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_req, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:label_requirement_plural),
         :add_enabled => true,
+        :view => :req_list,
         :tracker_type => issue_tracker_type
     }%>
 <%end%>
@@ -59,6 +60,7 @@ end
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tc, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_tests),
         :add_enabled => true,
+        :view => :test_case_list,
         :tracker_type => issue_tracker_type
     }%>
 <%end%>
@@ -71,6 +73,7 @@ end
         :title => l(:title_testit_runs),
         :tracker_type => issue_tracker_type,
         :create_enabled => create_enabled,
+        :view => :test_run_list, 
         :add_enabled => add_enabled
     }%>
 <%end%>
@@ -82,6 +85,7 @@ end
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_ts, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_suites),
         :add_enabled => true,
+        :view => :test_suite_list,
         :tracker_type => issue_tracker_type
     }%>
 <%end%>
@@ -93,6 +97,7 @@ end
         :add_relation_action =>  "add_testit_rel('#{url_for(:controller => :testit_relations, :action => :new_tp, :project_id => @project.id)}','#{@issue.id}');",
         :title => l(:title_testit_plans),
         :add_enabled => true,
+        :view => :test_plan_list,
         :tracker_type => issue_tracker_type
     }%>
 <%end%>

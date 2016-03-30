@@ -31,7 +31,8 @@
 
 <% if @testit_relations.present? %>
     <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => testit_relations, :issue => @issue, 
-                                                                :add_enabled => add_enabled, :create_enabled=> create_enabled}%>
+                                                                :add_enabled => add_enabled, :create_enabled=> create_enabled, 
+                                                                :view => view, :tracker_type => tracker_type}%>
 <% end %>
 
 </div>
