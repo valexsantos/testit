@@ -44,20 +44,20 @@ class TestitRelationsController < ApplicationController
   # /photos
   def create
       issue_tracker_type = @setting.tracker_type_of(@issue)
-      # @testit_relations = @issue.testit_relations.select {|r| r.other_issue(@issue) && r.other_issue(@issue).visible? }
+      # remove current relations from list (merge not supported yet)
+      rel_ids = @issue.testit_relations.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id.to_s : x.issue_from_id.to_s}
+      params[:ids] ||= []
+      params[:ids] = params[:ids] - rel_ids
       find_issues
-      # TODO start transaction
-      saved = true
-      @issues.each { | issue_to | 
-          testit_relation = Testit::Relation.new(:relation_type => params[:relation])
-          testit_relation.issue_from = @issue
-          testit_relation.issue_to = issue_to
-          testit_relation.init_journals(User.current)
-          x = testit_relation.save
-          p "RELATION => #{testit_relation} -> #{x}"
-          saved = x && saved
-      }
-      # TODO end transaction
+      ActiveRecord::Base.transaction do
+          @issues.each { | issue_to | 
+              testit_relation = Testit::Relation.new(:relation_type => params[:relation])
+              testit_relation.issue_from = @issue
+              testit_relation.issue_to = issue_to
+              testit_relation.init_journals(User.current)
+              testit_relation.save
+          }
+      end
      
       #  if params[:relation] && m = params[:relation][:issue_to_id].to_s.strip.match(/^#?(\d+)$/)
       #      @testit_relation.issue_to = Issue.visible.find_by_id(m[1].to_i)
@@ -109,7 +109,7 @@ class TestitRelationsController < ApplicationController
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial,
                         :locals => {:title => l(:title_add_to_test_suite), 
-                            :query_submit_url => { :controller => :testit_relations,  :action => :new_ts }} }
+                            :query_submit_url => { :controller => :testit_relations,  :action => :new_ts,:issue_id => @issue }} }
       end
   end
   # add test_run relation to test_plan
@@ -121,7 +121,7 @@ class TestitRelationsController < ApplicationController
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial, 
                         :locals => {:title => l(:title_add_test_run),
-                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tr}} }
+                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tr, :issue_id => @issue}} }
       end
   end
   # add test_csse relation to test_plan / test_suite
@@ -129,10 +129,12 @@ class TestitRelationsController < ApplicationController
       retrieve_query_for(Testit::Setting::TestCaseTrackerType)
       calc_relation_type(:new_tc) 
       @testit_relation = Testit::Relation.new(:relation_type => @relation_type)
+      @testit_relations = @issue.testit_relations.select{ |r| r.relation_type =~ /ts_has_tc|tc_part_of_ts/ }.map{|x| x.issue_from_id == @issue.id ? x.issue_to_id: x.issue_from_id}
+      
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial,
                         :locals => {:title => l(:title_add_test_case),
-                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tc}} }
+                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tc, :issue_id => @issue}} }
       end
   end
   # add test_plan relation to test_case
@@ -143,7 +145,7 @@ class TestitRelationsController < ApplicationController
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial,
                         :locals => {:title => l(:title_add_to_test_plan),
-                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tp}} }
+                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_tp, :issue_id => @issue}} }
       end
   end
   # add reuirement relation to test_case
@@ -155,7 +157,7 @@ class TestitRelationsController < ApplicationController
       respond_to do | format |
           format.html { render :layout => !request.xhr?, :partial => get_partial,
                         :locals => {:title => l(:title_add_requirement),
-                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_req}} }
+                                    :query_submit_url => { :controller => :testit_relations,  :action => :new_req, :issue_id => @issue}} }
       end
   end
   def retrieve_query_for(*testit_tracker_types)

@@ -7,11 +7,18 @@
 <span id="dialog-title" style="display:none"><%=title%></span>
 
 
+    <%= render :partial => 'testit_relations/query', :locals => {:query => @query, :issues => @issues, 
+                                                           :query_form_id => 'rel-query-form',
+                                                           :query_submit_url => query_submit_url,
+                                                           :query_list_dest_id => 'testit-dialog' } %>
+
 <%= form_for @testit_relation, :url => { :controller => :testit_relations, :action => :create, :issue => @issue, :relation_type => @relation_type, :issue_from => @issue}, 
     :html => { :id => "testit-relation-form", :multipart => true, :title => title} do |f| %>
 
     <%= hidden_field_tag 'issue', @issue.id %>
+    <%= hidden_field_tag 'selected_issues',  @testit_relations %>
 
+       
     <%= render :partial => 'testit_relations/issue_list', :locals => {:issues => @issues, :query => @query,
                                                                       :query_submit_url => query_submit_url}%>
 

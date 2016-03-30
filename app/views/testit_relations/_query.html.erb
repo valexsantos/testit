@@ -1,0 +1,78 @@
+<%#
+  render :partial => 'testit_common/query', :locals => {
+            :query => @query, :issues => @issues,
+            :query_form_id => query_form_id,
+            :query_submit_url => query_submit_url,
+            :query_list_dest_id => query_list_dest_id } 
+%>
+
+
+<%= form_tag( query_submit_url, :method => :get, :id => "#{query_form_id}") do %>
+   <div id="query_form_with_buttons" class="hide-when-print">
+       <%= hidden_field_tag 'set_filter', '1' %>
+       <div id="query_form_content">
+           <fieldset id="filters" class="collapsible <%= @query.new_record? ? "" : "collapsed" %>">
+               <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
+               <div style="<%= @query.new_record? ? "" : "display: none;" %>">
+                   <%= render :partial => 'testit_common/queries/filters', :locals => {:query => @query, :fid => "#{query_form_id}-filter"} %>
+               </div>
+           </fieldset>
+           <fieldset class="collapsible collapsed">
+               <legend onclick="toggleFieldset(this);"><%= l(:label_options) %></legend>
+               <div style="display: none;">
+                   <table>
+                       <tr>
+                           <td><%= l(:field_column_names) %></td>
+                           <td><%= render_query_columns_selection(@query) %></td>
+                       </tr>
+                       <tr>
+                           <td><label for='group_by'><%= l(:field_group_by) %></label></td>
+                           <td><%= select_tag('group_by', 
+                                     options_for_select([[]] + @query.groupable_columns.collect {|c| [c.caption, c.name.to_s]}, @query.group_by))%>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td><%= l(:button_show) %></td>
+                           <td><%= available_block_columns_tags(@query) %></td>
+                        </tr>
+                        <tr>
+                           <td><%= l(:label_total_plural) %></td>
+                           <td><%= available_totalable_columns_tags(@query) %></td>
+                        </tr>
+                   </table>
+               </div>
+           </fieldset>
+       </div>
+       <p class="buttons">
+       <%#= link_to_function l(:button_apply), 'submit_query_form("query_form")', :class => 'icon icon-checked' %>
+       <%= link_to_function l(:button_apply), "$('##{query_form_id}').submit();", :class => 'icon icon-checked' %>
+       <%= link_to_function l(:button_clear), "ajx('#{url_for query_submit_url.merge(:set_filter => 1)}','#{query_list_dest_id}')", :class => 'icon icon-reload' %>
+       </p>
+   </div>
+<% end %>
+
+<script>
+$('#<%=query_form_id%>').submit(function(e) {
+    var postData = $(this).serializeArray();
+    var formURL = $(this).attr("action");
+    $.ajax({
+        url : formURL,
+        type: 'get',
+        data : postData,
+        beforeSend: function(){
+            $('#ajax-indicator').show();
+        },
+        success: function(data, textStatus, jqXHR)  {
+            $('#ajax-indicator').hide();
+            $('#<%=query_list_dest_id%>').html(data);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            $('#ajax-indicator').hide();
+        }
+    });
+    return false;
+});
+</script>
+
+<%= error_messages_for 'query' %>
+

@@ -1,13 +1,23 @@
 
-    <div id="issue-for-relations-list">
-        <%# TODO TODO o problema da paginacao e do id da form %>
-        <%= render :partial => 'testit_common/issue_list', :locals => {:issues => @issues, :query => @query,
-         :title => '',
-          :available_formats => [],
-          :query_form_id => 'rel-query-form',
-          :query_submit_url => query_submit_url, 
-          :query_list_dest_id => 'rel-issue-list',
-          :table_form_id => 'rel-table-issue-list',
-          :table_show_select_all => true
-        } %>
-    </div>
+<div id="issue-for-relations-list">
+  <% if @query.valid? %>
+    <% if @issues.empty? %>
+       <p class="nodata"><%= l(:label_no_data) %></p>
+    <% else %>
+        <%= render_query_totals(@query) %>
+        <%= render :partial => 'testit_common/list', :locals => {:issues => @issues, :query => @query,
+                                                                 :table_form_id => 'rel-table-issue-list',
+                                                                 :table_show_select_all => true,
+                                                                 :selected => @testit_relations} %>
+       <%# TODO XXX fix pagination. definido num modulo dentro de lib/redmine/pagination.rb ... %>
+       <% 
+           # view partial_query_common_options
+       x=pagination_links_full @issue_pages, @issue_count
+       # todo add form_id 
+       x.gsub!( /href=\"(.*?)\"/,'href="#" onclick="loadIssueListbyUrl(\'\1\',\''"issue-for-relations-list"'\');"')
+       %>
+       <span class="pagination"><%=raw x%></span>
+    <% end %>
+  <% end %>
+</div>
+

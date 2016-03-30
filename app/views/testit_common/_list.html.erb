@@ -7,6 +7,7 @@
 
 %>
 
+<%selected ||= [] %>
 <%= form_tag({}) do -%>
 <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
 <div class="autoscroll">
@@ -44,7 +45,10 @@
       <% end %>
       <tr id="issue-<%= issue.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> <%= issue.css_classes %>">
           <%if table_show_select_all %>
-          <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, false,:id => nil) %></td>
+              <% # TODO fix - Move to spec form
+                checked = selected.include?(issue.id)
+              %>
+              <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", issue.id, checked ,:id => nil, :disabled => checked) %></td>
           <% end %>
         <%= raw @query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>"}.join %>
       </tr>
