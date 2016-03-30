@@ -29,7 +29,5 @@ TODO
 
 ## About
 
-(C) 2016 Vasco Santos
-
 This plugin is licensed under the GNU GPL v3. See [LICENSE](https://github.com/valexsantos/testit/blob/master/LICENSE) for details.
 
