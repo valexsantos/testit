@@ -1,6 +1,7 @@
 
 <% content_for :header_tags do %>
-	<%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_link_tag 'testit', :plugin => 'testit' %>
     <%= javascript_include_tag 'testit', :plugin => 'testit' %>
     <%= javascript_include_tag 'attachments' %>
     <%= javascript_include_tag 'application' %>

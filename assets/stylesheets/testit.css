@@ -1,0 +1,29 @@
+
+.status-current {
+    font-weight: bold;
+}
+.status-passed {
+    background-color: #aaff88;
+}
+.status-not_available{
+    background-color: #eeeeee;
+}
+.status-failed {
+    background-color: #ffcccc;
+}
+.status-blocked {
+    background-color: #ccccff;
+}
+.attr-status-passed {
+    color green;
+}
+.attr-status-not_available{
+    color grey;
+}
+.attr-status-failed {
+    color red;
+}
+.attr-status-blocked {
+    color cyan;
+}
+

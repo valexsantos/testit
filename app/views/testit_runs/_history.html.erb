@@ -1,21 +1,5 @@
 <% reply_links = authorize_for('issues', 'edit') -%>
-<style>
-.status-current {
-    font-weight: bold;
-}
-.status-passed {
-    background-color: #aaff88;
-}
-.status-not_available{
-    background-color: #eeeeee;
-}
-.status-failed {
-    background-color: #ffcccc;
-}
-.status-blocked {
-    background-color: #ccccff;
-}
-</style>
+
 <div class="details">
     <% first_status = true %>
     <% for journal in journals.reverse %>

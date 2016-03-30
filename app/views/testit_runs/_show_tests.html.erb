@@ -32,10 +32,10 @@
         <%= link_to_attachments other_issue, :thumbnails => true %>
         <div class="splitcontent">
           <div class="splitcontentleft">
-            <div class="attribute"><div class="label"><%=l(:field_status)%>:</div><div class="value"><%=other_issue.status.name %></div></div>
+            <div class="status attribute"><div class="label"><%=l(:field_status)%>:</div><div class="value"><%=other_issue.status.name %></div></div>
           </div>
           <div class="splitcontentleft">
-            <div class="attribute"><div class="label"><%=l(:field_updated_on)%>:</div><div class="value"><%=format_date(other_issue.updated_on) %></div></div>
+            <div class="updated_on attribute"><div class="label"><%=l(:field_updated_on)%>:</div><div class="value"><%=format_date(other_issue.updated_on) %></div></div>
           </div>
         </div>
       </div>

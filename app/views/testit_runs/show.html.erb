@@ -26,7 +26,8 @@
   </p> 
   <div class="attributes">
     <%= issue_fields_rows do |rows|
-        rows.left l(:field_status), @issue.status.name, :class => 'status'
+        rows.left l(:field_status), @issue.status.name, :class => "status attr-status-#{@issue.status.name.strip.split.join('_').downcase} status-current"
+
 
         unless @issue.disabled_core_fields.include?('updated_on')
             rows.right l(:field_updated_on), format_time(@issue.updated_on).html_safe, :class => 'updated_on'
