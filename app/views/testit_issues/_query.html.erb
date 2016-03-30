@@ -40,11 +40,11 @@
        <%= link_to_function l(:button_apply), "$('#query_form').submit();", :class => 'icon icon-checked' %>
        <%= link_to_function l(:button_clear), "ajx('#{url_for( :controller => "testit_issues", :action => "index", :project_id => @project, 
                   :table => true, :modal=> true,  :set_filter => 1)}','issue-list')", :class => 'icon icon-reload' %>
-             <% if false && @query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %> <%# TODO %>
-             <%= link_to_function l(:button_save),
+       <% if false && @query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %> <%# TODO %>
+           <%= link_to_function l(:button_save),
                 "$('#query_form').attr('action','#{ @project ? new_project_query_path(@project) : new_query_path }').submit()",
                 :class => 'icon icon-save' %>
-          <% end %>
+       <% end %>
        </p>
    </div>
 <% end %>

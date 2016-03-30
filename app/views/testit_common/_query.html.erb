@@ -47,11 +47,11 @@
        <p class="buttons">
        <%= link_to_function l(:button_apply), "$('##{query_form_id}').submit();", :class => 'icon icon-checked' %>
        <%= link_to_function l(:button_clear), "ajx('#{url_for query_submit_url.merge(:set_filter => 1)}','#{query_list_dest_id}')", :class => 'icon icon-reload' %>
-       <% if false && @query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %> <%# TODO  %>
+       <% if false && @query.new_record? && User.current.allowed_to?(:save_queries, @project, :global => true) %> <%# TODO %>
              <%= link_to_function l(:button_save),
                  "$('##{query_form_id}').attr('action','#{ @project ? new_project_query_path(@project) : new_query_path }').submit()",
                 :class => 'icon icon-save' %>
-          <% end %>
+       <% end %>
        </p>
    </div>
 <% end %>
