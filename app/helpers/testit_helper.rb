@@ -35,12 +35,13 @@ module TestitHelper
             :partial => 'testit_runs/index',
             :label => :title_testit_runs
         } # if can_view
-        tabs << {
-            :name => 'TestItReports',
-            :partial => 'testit_reports/index',
-            :url => { :controller => :testit_reports, :action => :index},
-            :label => :title_testit_reports
-        } # if can_view
+        # TODO
+        # tabs << {
+        #     :name => 'TestItReports',
+        #     :partial => 'testit_reports/index',
+        #     :url => { :controller => :testit_reports, :action => :index},
+        #     :label => :title_testit_reports
+        # } # if can_view
         tabs
     end
 

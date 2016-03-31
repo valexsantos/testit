@@ -26,7 +26,7 @@ class SetupTestitTrackers < ActiveRecord::Migration
         # TestSuite
         # TestPlan
         #   status
-        #     Ready
+        #     Resolved
         #     Obsoleted
         new_status=create_issue_status(
             :name => "New",
@@ -36,8 +36,8 @@ class SetupTestitTrackers < ActiveRecord::Migration
             :name => "In Progress",
             :is_closed => false
         )
-        ready_status = create_issue_status(
-            :name => "Ready",
+        resolved_status = create_issue_status(
+            :name => "Resolved",
             :is_closed => false
         )
         obsoleted_status = create_issue_status(
@@ -99,12 +99,12 @@ class SetupTestitTrackers < ActiveRecord::Migration
         Role.all.each { |role|
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => new_status, :new_status => in_progress_status)
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => new_status, :new_status => rejected_status)
-            WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => in_progress_status, :new_status => ready_status)
+            WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => in_progress_status, :new_status => resolved_status)
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => in_progress_status, :new_status => rejected_status)
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => in_progress_status, :new_status => obsoleted_status)
-            WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => ready_status,     :new_status => in_progress_status)
-            WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => ready_status,     :new_status => rejected_status)
-            WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => ready_status,     :new_status => obsoleted_status)
+            WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => resolved_status,     :new_status => in_progress_status)
+            WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => resolved_status,     :new_status => rejected_status)
+            WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => resolved_status,     :new_status => obsoleted_status)
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => obsoleted_status, :new_status => closed_status)
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => obsoleted_status, :new_status => in_progress_status)
             WorkflowTransition.create!(:tracker => testcase_tracker, :role => role , :old_status => obsoleted_status, :new_status => rejected_status)
@@ -113,12 +113,12 @@ class SetupTestitTrackers < ActiveRecord::Migration
             #
             WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => new_status, :new_status => in_progress_status)
             WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => new_status, :new_status => rejected_status)
-            WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => in_progress_status, :new_status => ready_status)
+            WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => in_progress_status, :new_status => resolved_status)
             WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => in_progress_status, :new_status => rejected_status)
             WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => in_progress_status, :new_status => obsoleted_status)
-            WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => ready_status,     :new_status => in_progress_status)
-            WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => ready_status,     :new_status => rejected_status)
-            WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => ready_status,     :new_status => obsoleted_status)
+            WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => resolved_status,     :new_status => in_progress_status)
+            WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => resolved_status,     :new_status => rejected_status)
+            WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => resolved_status,     :new_status => obsoleted_status)
             WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => obsoleted_status, :new_status => closed_status)
             WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => obsoleted_status, :new_status => in_progress_status)
             WorkflowTransition.create!(:tracker => testsuite_tracker, :role => role , :old_status => obsoleted_status, :new_status => rejected_status)
@@ -127,12 +127,12 @@ class SetupTestitTrackers < ActiveRecord::Migration
             #
             WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => new_status, :new_status => in_progress_status)
             WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => new_status, :new_status => rejected_status)
-            WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => in_progress_status, :new_status => ready_status)
+            WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => in_progress_status, :new_status => resolved_status)
             WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => in_progress_status, :new_status => rejected_status)
             WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => in_progress_status, :new_status => obsoleted_status)
-            WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => ready_status,     :new_status => in_progress_status)
-            WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => ready_status,     :new_status => rejected_status)
-            WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => ready_status,     :new_status => obsoleted_status)
+            WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => resolved_status,     :new_status => in_progress_status)
+            WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => resolved_status,     :new_status => rejected_status)
+            WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => resolved_status,     :new_status => obsoleted_status)
             WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => obsoleted_status, :new_status => closed_status)
             WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => obsoleted_status, :new_status => in_progress_status)
             WorkflowTransition.create!(:tracker => testplan_tracker, :role => role , :old_status => obsoleted_status, :new_status => rejected_status)
