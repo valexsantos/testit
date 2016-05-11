@@ -7,9 +7,9 @@ class CreateTestitRelations < ActiveRecord::Migration
             t.integer "delay",         limit: 4
         end
 
-        add_index "testit_relations", ["issue_from_id", "issue_to_id"], name: "index_testit_relations_on_issue_from_id_and_issue_to_id", unique: true, using: :btree
-        add_index "testit_relations", ["issue_from_id"], name: "index_testit_relations_on_issue_from_id", using: :btree
-        add_index "testit_relations", ["issue_to_id"], name: "index_testit_relations_on_issue_to_id", using: :btree
+        add_index "testit_relations", ["issue_from_id", "issue_to_id"], name: "idx_testit_from_id_and_to_id", unique: true, using: :btree
+        add_index "testit_relations", ["issue_from_id"], name: "idx_testit_on_issue_from_id", using: :btree
+        add_index "testit_relations", ["issue_to_id"], name: "idx_testit_on_issue_to_id", using: :btree
 
     end
 
