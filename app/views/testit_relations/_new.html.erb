@@ -10,7 +10,7 @@
     <%= render :partial => 'testit_relations/query', :locals => {:query => @query, :issues => @issues, 
                                                            :query_form_id => 'rel-query-form',
                                                            :query_submit_url => query_submit_url,
-                                                           :query_list_dest_id => 'testit-dialog' } %>
+                                                           :query_list_dest_id => 'ajax-modal' } %>
 
 <%= form_for @testit_relation, :url => { :controller => :testit_relations, :action => :create, :issue => @issue, :relation_type => @relation_type, :issue_from => @issue}, 
     :html => { :id => "testit-relation-form", :multipart => true, :title => title} do |f| %>

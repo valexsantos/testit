@@ -370,7 +370,7 @@ function editIssue(the_url, element) {
         },
         success: function(data){
            $('#ajax-indicator').hide();
-           showTestitModal('testit-dialog', data, '840px');
+           showTestitModal('ajax-modal', data, '840px');
         },
         error: function(xhr){
             $('#ajax-indicator').hide();
@@ -437,7 +437,7 @@ function newIssue(the_url, form_id) {
         success: function(data){
            // console.log(data);
            $('#ajax-indicator').hide();
-           showTestitModal('testit-dialog', data, '840px');
+           showTestitModal('ajax-modal', data, '840px');
         },
         error: function(xhr){
             $('#ajax-indicator').hide();
@@ -458,7 +458,7 @@ function add_testit_rel(the_url, issue_id) {
         },
         success: function(data){
             $('#ajax-indicator').hide();
-           showTestitModal('testit-dialog', data, '840px');
+           showTestitModal('ajax-modal', data, '840px');
         },
         error: function(xhr){
             $('#ajax-indicator').hide();
@@ -508,7 +508,7 @@ function add_test_case(p) {
         success: function(data){
            // console.log(data);
            $('#ajax-indicator').hide();
-           showTestitModal('testit-dialog', data, '840px');
+           showTestitModal('ajax-modal', data, '840px');
         },
         error: function(xhr){
             $('#ajax-indicator').hide();
@@ -528,7 +528,7 @@ function add_test_suite(p) {
         success: function(data){
            // console.log(data);
            $('#ajax-indicator').hide();
-           showTestitModal('testit-dialog', data, '840px');
+           showTestitModal('ajax-modal', data, '840px');
         },
         error: function(xhr){
             $('#ajax-indicator').hide();
@@ -547,7 +547,7 @@ function add_test_plan(p) {
         success: function(data){
            // console.log(data);
            $('#ajax-indicator').hide();
-           showTestitModal('testit-dialog', data, '840px');
+           showTestitModal('ajax-modal', data, '840px');
         },
         error: function(xhr){
             $('#ajax-indicator').hide();
@@ -622,7 +622,7 @@ function hideTestitModal(el) {
     if (el) {
         modal = $(el).parents('.ui-dialog-content');
     } else {
-        modal = $('#testit-dialog');
+        modal = $('#ajax-modal');
     }
     modal.dialog("close");
     modal.html('');
