@@ -5,7 +5,7 @@
 <table class="list issues">
 <%
         can_delete = tracker_type == Testit::Setting::TestCaseTrackerType && view == :test_run_list ?  create_enabled && testit_relations.size > 1 : create_enabled 
-p "========================== #{can_delete}"
+
 %>
 <% testit_relations.each do |relation| %>
   <% other_issue = relation.other_issue(@issue) -%>
