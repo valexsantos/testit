@@ -246,10 +246,10 @@ module TestitIssuesAbstractController
                 @issue.time_entries << time_entry
             end
 
-            call_hook(:controller_issues_edit_before_save, { :params => params, :issue => @issue, :time_entry => time_entry, :journal => @issue.current_journal})
-            if @issue.save
-                call_hook(:controller_issues_edit_after_save, { :params => params, :issue => @issue, :time_entry => time_entry, :journal => @issue.current_journal})
-            else
+            #call_hook(:controller_issues_edit_before_save, { :params => params, :issue => @issue, :time_entry => time_entry, :journal => @issue.current_journal})
+            if !@issue.save
+                #call_hook(:controller_issues_edit_after_save, { :params => params, :issue => @issue, :time_entry => time_entry, :journal => @issue.current_journal})
+            #else
                 raise ActiveRecord::Rollback
             end
         end

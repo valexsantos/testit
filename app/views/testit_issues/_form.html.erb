@@ -1,5 +1,5 @@
 <%= labelled_fields_for :issue, @issue do |f| %>
-<%= call_hook(:view_issues_form_details_top, { :issue => @issue, :form => f }) %>
+<%#= call_hook(:view_issues_form_details_top, { :issue => @issue, :form => f }) %>
 <%= hidden_field_tag 'form_update_triggered_by', '' %>
 
 <% if @issue.safe_attribute? 'is_private' %>
@@ -42,7 +42,7 @@
   <%= render :partial => 'testit_issues/attributes' %>
 </div>
 
-<%= call_hook(:view_issues_form_details_bottom, { :issue => @issue, :form => f }) %>
+<%#= call_hook(:view_issues_form_details_bottom, { :issue => @issue, :form => f }) %>
 <% end %>
 
 <% heads_for_wiki_formatter %>

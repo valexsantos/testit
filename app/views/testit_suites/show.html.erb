@@ -55,7 +55,7 @@
                   end
             end %>
         <%= render_custom_fields_rows(@issue) %>
-        <%= call_hook(:view_issues_show_details_bottom, :issue => @issue) %>
+        <%#= call_hook(:view_issues_show_details_bottom, :issue => @issue) %>
     </div>
     <% if @issue.description? || @issue.attachments.any? -%>
         <hr />
@@ -73,7 +73,8 @@
         <% end %>
         <%= link_to_attachments @issue, :thumbnails => true %>
     <% end -%>
-  <%= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
+  <%#= call_hook(:view_issues_show_description_bottom, :issue => @issue) %>
+    <%= render :partial => "testit_relations/show.hook", :locals => { :issue => @issue, :@setting => Testit::Setting.find_by(:project_id => @project)} %>
 </div>
 
 <%= render :partial => 'testit_common/other_formats', :locals => {:query => @query, :available_formats => ['PDF']} %>

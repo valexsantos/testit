@@ -6,7 +6,7 @@
   #  :add_relation_action =>  "addTestRelation(this,'#{@issue.id}','#{@testit_relation.relations_for(@issue)}');" 
   #  :title => <%=l(:label_testit_relation)
 %>
-  
+
 <div>
   <hr/>
 <% add_enabled ||=false %>
@@ -25,9 +25,7 @@
   </div>
 <% end %>
 
-
 <p><strong><%=title%></strong></p>
-
 
 <% if @testit_relations.present? %>
     <%= render :partial => 'testit_relations/list', :locals => {:testit_relations => testit_relations, :issue => @issue, 

@@ -31,7 +31,6 @@ end
 
 # TODO FIX 
   @testit_relations = @issue.testit_relations.select {|r| r.other_issue(@issue) && r.other_issue(@issue).visible? }
-
 %>
 
 

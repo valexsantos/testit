@@ -1,7 +1,7 @@
 module Testit
     class Hooks < Redmine::Hook::ViewListener
-        render_on :view_issues_show_description_bottom,
-            :partial => 'testit_relations/show.test'
+        render_on :view_issues_show_description_bottom #,
+          #  :partial => 'testit_relations/show.test'
 
         def view_issues_show_description_bottom(context={ })
             # the controller parameter is part of the current params object
